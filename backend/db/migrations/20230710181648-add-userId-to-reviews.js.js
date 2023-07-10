@@ -1,20 +1,18 @@
 'use strict';
 
-const { query } = require('express-validator');
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  async up (queryInterface, Sequelize) {
     /**
      * Add altering commands here.
      *
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.addColumn('SpotImages', 'spotId', {
+    await queryInterface.addColumn('Reviews', 'userId', {
       type: Sequelize.INTEGER,
       references: {
-        model: 'Spots',
+        model: 'Users',
         key: 'id'
       },
       onDelete: 'CASCADE',
@@ -22,14 +20,13 @@ module.exports = {
     })
   },
 
-  async down(queryInterface, Sequelize) {
+  async down (queryInterface, Sequelize) {
     /**
      * Add reverting commands here.
      *
      * Example:
      * await queryInterface.dropTable('users');
      */
-
-    await queryInterface.removeColumn('SpotImages', 'spotId')
+    await queryInterface.removeColumn('Reviews','userId')
   }
 };
