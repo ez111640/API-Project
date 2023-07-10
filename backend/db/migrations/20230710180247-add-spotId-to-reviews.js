@@ -9,10 +9,10 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.addColumn('ReviewImages', 'reviewId', {
+    await queryInterface.addColumn('Reviews', 'spotId', {
       type: Sequelize.INTEGER,
       references: {
-        model: 'Reviews',
+        model: 'Spots',
         key: 'id'
       },
       onDelete: 'CASCADE',
@@ -27,6 +27,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.dropColumn('ReviewImages', 'reviewId')
+    await queryInterface.dropColumn('Reviews', 'spotId')
   }
 };
