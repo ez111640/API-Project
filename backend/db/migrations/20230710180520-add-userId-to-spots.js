@@ -17,7 +17,7 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.addColumn('Spots', 'userId', {
+    await queryInterface.addColumn('Spots', 'ownerId', {
       type: Sequelize.INTEGER,
       references: {
         model: 'Users',
