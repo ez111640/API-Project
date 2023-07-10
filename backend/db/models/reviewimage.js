@@ -20,10 +20,6 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true
     },
-    reviewId: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
     url: {
       type: DataTypes.STRING,
       allowNull: false,
