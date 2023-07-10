@@ -10,14 +10,14 @@ if (process.env.NODE_ENV === 'production') {
 options.tableName = 'Reviews'
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     /**
      * Add altering commands here.
      *
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.addColumn('Reviews', 'userId', {
+    await queryInterface.addColumn(options, 'userId', {
       type: Sequelize.INTEGER,
       references: {
         model: 'Users',
@@ -25,16 +25,16 @@ module.exports = {
       },
       onDelete: 'CASCADE',
       hooks: true
-    }, options)
+    })
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     /**
      * Add reverting commands here.
      *
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.removeColumn(options,'userId')
+    await queryInterface.removeColumn(options, 'userId')
   }
 };

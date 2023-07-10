@@ -1,6 +1,14 @@
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA
+}
+
+options.tableName = 'Reviews'
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     /**
@@ -9,7 +17,7 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.addColumn('ReviewImages', 'reviewId', {
+    await queryInterface.addColumn(options, 'reviewId', {
       type: Sequelize.INTEGER,
       references: {
         model: 'Reviews',
@@ -27,6 +35,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.removeColumn('ReviewImages', 'reviewId')
+    await queryInterface.removeColumn(options, 'reviewId')
   }
 };

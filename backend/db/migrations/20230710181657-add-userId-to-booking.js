@@ -12,7 +12,7 @@ options.tableName = 'Bookings'
 module.exports = {
   async up(queryInterface, Sequelize) {
 
-    await queryInterface.addColumn('Bookings', 'userId', {
+    await queryInterface.addColumn(options, 'userId', {
       type: Sequelize.INTEGER,
       references: {
         model: 'Users',
@@ -20,7 +20,7 @@ module.exports = {
       },
       onDelete: 'CASCADE',
       hooks: true
-    }, options)
+    })
   },
 
   async down(queryInterface, Sequelize) {

@@ -3,6 +3,14 @@
 const { query } = require('express-validator');
 
 /** @type {import('sequelize-cli').Migration} */
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA
+}
+
+options.tableName = 'SpotImages'
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     /**
@@ -11,7 +19,7 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.addColumn('SpotImages', 'spotId', {
+    await queryInterface.addColumn(options, 'spotId', {
       type: Sequelize.INTEGER,
       references: {
         model: 'Spots',
@@ -30,6 +38,6 @@ module.exports = {
      * await queryInterface.dropTable('users');
      */
 
-    await queryInterface.removeColumn('SpotImages', 'spotId')
+    await queryInterface.removeColumn(options, 'spotId')
   }
 };
