@@ -1,6 +1,13 @@
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA
+}
+
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     /**
@@ -17,7 +24,7 @@ module.exports = {
       },
       onDelete: 'CASCADE',
       hooks: true
-    })
+    }, options)
   },
 
   async down(queryInterface, Sequelize) {
@@ -27,6 +34,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.removeColumn('Spots', 'userId')
+    await queryInterface.removeColumn(options, 'userId')
   }
 };

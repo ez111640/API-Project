@@ -1,5 +1,13 @@
 'use strict';
 
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA
+}
+
+options.tableName = 'Bookings'
+
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -12,11 +20,11 @@ module.exports = {
       },
       onDelete: 'CASCADE',
       hooks: true
-    })
+    }, options)
   },
 
   async down(queryInterface, Sequelize) {
 
-    await queryInterface.removeColumn('Bookings', 'userId')
+    await queryInterface.removeColumn(options, 'userId')
   }
 };
