@@ -1,7 +1,6 @@
 'use strict';
 
-const { User } = require('../models');
-const bcrypt = require("bcryptjs")
+const { Spot } = require('../models');
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -21,28 +20,31 @@ module.exports = {
      * }], {});
     */
 
-    await User.bulkCreate([
+    await Spot.bulkCreate([
       {
-        email: 'demo@user.io',
-        username: 'Demo-lition',
-        firstName: 'EmmaRain',
-        lastName: 'Zimmerman',
-        hashedPassword: bcrypt.hashSync('password'),
+        ownerId: 1,
+        address: '1234 This Street',
+        city: 'Our City',
+        state: 'WV',
+        country: 'United States',
+        lat: '82.34',
+        lng: '123.5',
+        name: 'First Spot',
+        description: 'A lovely first Air BnB Spot',
+        price: '124.55'
       },
       {
-        email: 'user1@user1.io',
-        username: 'FakeUser1',
-        firstName: 'Erica',
-        lastName: 'Zimmerman',
-        hashedPassword: bcrypt.hashSync('password2'),
+        ownerId: 1,
+        address: '1234 This Street',
+        city: 'Our City',
+        state: 'WV',
+        country: 'United States',
+        lat: '82.34',
+        lng: '123.5',
+        name: 'First Spot',
+        description: 'A lovely first Air BnB Spot',
+        price: '124.55'
       },
-      {
-        email: 'user2@user2.io',
-        username: 'FakeUser2',
-        firstName: 'Kayla',
-        lastName: 'Hatle',
-        hashedPassword: bcrypt.hashSync('password3'),
-      }
     ], {
       validate: true
     });
@@ -55,12 +57,11 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-
-    options.tableName = ('Users');
+    options.tableName = ('Spots');
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      username: {
-        [Op.in]: ['Demo-lition', 'FakeUser1', 'FakeUser2']
+      name: {
+        [Op.in]: ['First Spot', 'Second Spot', 'Third Spot']
       }
     }, {})
   }

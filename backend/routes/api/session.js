@@ -27,6 +27,19 @@ router.post(
     async (req, res, next) => {
         const { credential, password } = req.body;
 
+        if (!credential) {
+            const err = new Error('Bad Request');
+            err.status = 400;
+            err.errors = { credential: 'Email or username is required' }
+            return next(err)
+        }
+        if (!password) {
+            const err = new Error('Bad Request');
+            err.status = 400;
+            err.errors = { password: 'Password is required' }
+            return next(err)
+        }
+
         const user = await User.unscoped().findOne({
             where: {
                 [Op.or]: {
@@ -40,7 +53,7 @@ router.post(
             const err = new Error('Login failed');
             err.status = 401;
             err.title = 'Login failed';
-            err.errors = { credential: 'The provided credentials were invalid.' };
+            err.errors = { message: 'Invalid credentials' };
             return next(err);
         }
 

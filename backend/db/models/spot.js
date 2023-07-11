@@ -10,7 +10,27 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Spot.belongsTo(models.User,
+        {
+          foreignKey:
+            'ownerId',
+        }
+      )
+
+      Spot.hasMany(models.Review,
+        {
+          foreignKey: 'reviewId',
+          onDelete: 'CASCADE',
+          hooks: true
+        }
+      )
+      Spot.hasMany(models.SpotImage,
+        {
+          foreignKey: 'spotId',
+          onDelete: 'CASCADE',
+          hooks: true
+        }
+      )
     }
   }
   Spot.init({
@@ -26,30 +46,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     city: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        isAlpha: true
-      }
+      allowNull: false
     },
     state: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        isIn: [[ 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
-        'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME',
-        'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM',
-        'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX',
-        'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY']],
-        isAlpha: true,
-        len: [2,2]
-      }
     },
     country:{
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        isAlpha: true
-      }
     },
     lat: {
       type: DataTypes.DECIMAL,
@@ -70,9 +75,6 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        isAlphanumeric: true
-      }
     },
     description: {
       type:DataTypes.STRING,
@@ -80,9 +82,6 @@ module.exports = (sequelize, DataTypes) => {
     price: {
       type: DataTypes.DECIMAL,
       allowNull: false,
-      validate: {
-        isNumeric: true
-      }
     }
   }, {
     sequelize,
