@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA
 }
 
-options.tableName = 'Reviews'
+options.tableName = 'ReviewImages'
 
 module.exports = {
   async up(queryInterface, Sequelize) {

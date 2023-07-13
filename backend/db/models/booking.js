@@ -32,16 +32,10 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true
     },
     startDate: {
-      type: DataTypes.DATE,
-      validate: {
-        isBefore: this.endDate
-      }
+      type: DataTypes.DATE
     },
     endDate: {
-      type: DataTypes.DATE,
-      validate: {
-        isAfter: this.startDate
-      }
+      type: DataTypes.DATE
     }
   }, {
     sequelize,

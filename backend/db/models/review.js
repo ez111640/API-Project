@@ -1,5 +1,4 @@
 'use strict';
-const { identity } = require('lodash');
 const {
   Model
 } = require('sequelize');
