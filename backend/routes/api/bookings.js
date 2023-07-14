@@ -34,9 +34,18 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
         where: {
             userId: req.user.id
         }
-    })
-    const currentDate = new Date();
-    if(currentDate > thisBooking.endDate){
+     })
+
+     const currentDate = new Date();
+     const end = thisBooking.toJSON().endDate.toDateString()
+
+     const today = currentDate.toDateString()
+
+     console.log(today < end)
+
+
+
+    if(today <  end){
         res.status(400)
         res.json({
             message: "You can't edit a past booking"
