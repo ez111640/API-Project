@@ -15,6 +15,7 @@ router.get('/current', requireAuth, async (req, res) => {
         where: { userId: userId },
         include: [{
             model: Spot,
+            attributes: ['id','ownerId','address','city','state','country','lat','lng','name','price'],
             include: [{
                 model: SpotImage,
                 attributes: ['url'],
@@ -26,42 +27,56 @@ router.get('/current', requireAuth, async (req, res) => {
         }]
     })
 
-    return res.json(bookingsArr)
+    const bookArr = bookingsArr.map(booking => {
+        const thisBook = booking.toJSON()
+        if (thisBook.Spot) {
+            if (thisBook.Spot.previewImage) {
+                thisBook.Spot.previewImage = thisBook.Spot.previewImage[0]
+            }
+        }
+        return thisBook
+    })
+
+    return res.json({Bookings: bookArr})
+
 })
 
 router.put('/:bookingId', requireAuth, async (req, res) => {
-    const thisBooking = await Booking.findByPk(req.params.bookingId, {
-        where: {
-            userId: req.user.id
-        }
-     })
-
-     const currentDate = new Date();
-     const end = thisBooking.toJSON().endDate.toDateString()
-
-     const today = currentDate.toDateString()
-
-     console.log(today < end)
-
-
-
-    if(today <  end){
-        res.status(400)
-        res.json({
-            message: "You can't edit a past booking"
-        })
-    }
-    const {startDate, endDate } = req.body;
-
+    const thisBooking = await Booking.findByPk(req.params.bookingId)
 
     if (!thisBooking) {
         res.status(404)
         const err = new Error("Booking not found")
         err.errors = {
-            message: "That booking wasn't found"
+            message: "Booking couldn't be found"
         }
         return res.json(err.errors)
     }
+
+    if(thisBooking.userId !== req.user.id){
+        res.status(403)
+        return res.json({
+            message: "Forbidden"
+        })
+    }
+
+    const currentDate = new Date();
+
+    const end = new Date(thisBooking.toJSON().endDate.toDateString())
+
+    const today = new Date(currentDate.toDateString())
+
+
+    if (today > end) {
+        res.status(400)
+        res.json({
+            message: "Past bookings can't be modified"
+        })
+    }
+    const { startDate, endDate } = req.body;
+
+
+
 
     const bookings = await Booking.findAll({
         where: {
@@ -71,16 +86,16 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 
     const bookingArr = bookings.map(booking => {
         const thisBooking = booking.toJSON()
-        if(thisBooking.startDate < endDate &&  thisBooking.startDate > endDate){
+        if (thisBooking.startDate < endDate && thisBooking.startDate > endDate) {
             res.status(403)
             res.json({
-                message: "Booking conflict"
+                message: "Start date conflicts with an existing booking"
             })
         }
-        if(thisBooking.endDate < startDate && thisBooking.endDate > endDate){
+        if (thisBooking.endDate < startDate && thisBooking.endDate > endDate) {
             res.status(403)
             res.json({
-                message: "Booking conflict"
+                message: "End date conflicts with an existing booking"
             })
         }
         return thisBooking
@@ -99,11 +114,20 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 router.delete('/:bookingId', requireAuth, async (req, res) => {
     const thisBooking = await Booking.findByPk(req.params.bookingId)
 
+    const thisSpot = await Spot.findByPk(thisBooking.spotId)
+
+    if(thisBooking.userId !== req.user.id && thisSpot.ownerId !== req.user.id){
+        res.status(403)
+        return res.json({
+            message: "Forbidden"
+        })
+    }
+
     const currentDate = new Date();
-    if(currentDate > thisBooking.endDate){
+    if (currentDate > thisBooking.startDate) {
         res.status(400)
         res.json({
-            message: "You can't delete a past booking"
+            message: "Bookings that have been started can't be deleted"
         })
     }
 
@@ -111,14 +135,14 @@ router.delete('/:bookingId', requireAuth, async (req, res) => {
         const err = new Error("Booking wasn't found")
         res.status(404)
         err.errors = {
-            message: "That booking couldn't be found"
+            message: "Booking couldn't be found"
         }
         return res.json(err.errors)
     }
     if (thisBooking.userId !== req.user.id) {
         res.status(500)
         res.json({
-            message: "unauthorized"
+            message: "Forbidden"
         })
     }
     if (thisBooking) {

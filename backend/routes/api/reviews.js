@@ -9,13 +9,14 @@ const { max } = require('lodash');
 
 const router = express.Router();
 
-const validateReview = [
+const validateReviews = [
     check('review')
-        .exists({ checkFalsy: true })
-        .withMessage('Review is required'),
+    .exists({ checkFalsy: true })
+    .withMessage("Review text is required"),
     check('stars')
-        .exists({ checkFalsy: true })
-        .withMessage('Stars are required'),
+    .exists ({ checkFalsy: true })
+    .isInt({min: 1, max: 5})
+    .withMessage("Stars must be an integer from 1 to 5"),
     handleValidationErrors
 ]
 
@@ -40,18 +41,26 @@ router.get('/current', requireAuth, async (req, res) => {
             }]
         }, {
             model: ReviewImage,
+            attributes: ['id','url']
         }]
     })
 
-    const reviewArr = allReviews.map(review => {
-        const thisReview = review.toJSON();
-        if(thisReview.Spot.previewImage) {
-            thisReview.Spot.previewImage = thisReview.Spot.previewImage[0].url
-        }
-        return thisReview;
-    })
-
-    return res.json(reviewArr)
+    if(!allReviews.length){
+        req.status(404)
+        return res.json({
+            message: "No reviews found"
+        })
+    }
+    if (allReviews.length) {
+        const reviewArr = allReviews.map(review => {
+            const thisReview = review.toJSON();
+            if (thisReview.Spot && thisReview.Spot.previewImage) {
+                thisReview.Spot.previewImage = thisReview.Spot.previewImage[0].url
+            }
+            return thisReview;
+        })
+        return res.json({Reviews: reviewArr})
+    }
 })
 
 router.post('/:reviewId/images', requireAuth, async (req, res) => {
@@ -63,17 +72,18 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
 
     const review = await Review.findByPk(id);
 
+
     if (review === null) {
         res.status(404)
         res.json({
-            message: "Review wasn't found"
+            message: "Review couldn't be found"
         })
     }
 
     if (review.userId !== userId) {
-        res.status(401)
+        res.status(403)
         res.json({
-            message: "You can only add images to your own reviews"
+            message: "Forbidden"
         })
     }
 
@@ -111,23 +121,27 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
     const err = new Error("Review couldn't be found")
     res.status(404)
     err.errors = {
-        message: "That Review couldn't be found"
+        message: "Review couldn't be found"
     }
     return res.json(err.errors)
 
 })
 
-router.put('/:reviewId', requireAuth, async (req, res) => {
-    const thisReview = await Review.findByPk(req.params.reviewId, {
-        where: {
-            userId: req.user.id
-        }
-    })
+router.put('/:reviewId', requireAuth, validateReviews, async (req, res) => {
+    const thisReview = await Review.findByPk(req.params.reviewId, {})
+
+
+    if (thisReview && thisReview.toJSON().userId !== req.user.id) {
+        res.status(403)
+        return res.json({
+            message: "Forbidden"
+        })
+    }
     if (!thisReview) {
         res.status(404)
-        const err = new Error("Spot not found")
+        const err = new Error("Review not found")
         err.errors = {
-            message: "That spot wasn't found"
+            message: "Review couldn't be found"
         }
         return res.json(err.errors);
     }
@@ -144,10 +158,7 @@ router.put('/:reviewId', requireAuth, async (req, res) => {
     if (review) thisReview.review = review
     if (stars) thisReview.stars = stars
 
-
-
     await thisReview.save()
-
     await thisReview.validate()
     return res.json(thisReview)
 
@@ -157,6 +168,11 @@ router.put('/:reviewId', requireAuth, async (req, res) => {
 
 router.delete('/:reviewId', requireAuth, async (req, res) => {
     const thisReview = await Review.findByPk(req.params.reviewId)
+    if(thisReview && thisReview.userId !== req.user.id){
+        res.status(403)
+        return res.json({message: "Forbidden"})
+    }
+
     if (thisReview) {
         await thisReview.destroy()
         return res.json({ message: 'Successfully deleted' })

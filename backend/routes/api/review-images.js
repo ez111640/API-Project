@@ -4,29 +4,40 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { ValidationError } = require('sequelize');
 const { requireAuth } = require('../../utils/auth.js');
-const {  restoreUser } = require('../../utils/auth');
+const { restoreUser } = require('../../utils/auth');
 
 const router = express.Router();
 
-router.delete('/:imageId', requireAuth, async(req, res) => {
+router.delete('/:imageId', requireAuth, async (req, res) => {
     const thisImage = await ReviewImage.findByPk(req.params.imageId)
-    if(thisImage) {
-        await thisImage.destroy()
-        return res.json({ message: 'Successfully deleted'})
-    }
-        const err = new Error("Image couldn't be found")
-        res.status(404)
-        err.errors = {
-            message: "That image couldn't be found"
+
+    if (thisImage) {
+        const thisReview = await Review.findByPk(thisImage.reviewId)
+        if (thisReview.toJSON().userId !== req.user.id) {
+            res.status(403)
+            return res.json({
+                message: "Forbidden"
+            })
         }
-        return res.json(err.errors)
+    }
+
+    if (thisImage) {
+        await thisImage.destroy()
+        return res.json({ message: 'Successfully deleted' })
+    }
+    const err = new Error("Image couldn't be found")
+    res.status(404)
+    err.errors = {
+        message: "Review Image couldn't be found"
+    }
+    return res.json(err.errors)
 
 })
 
-router.get('/', async(req, res) => {
+router.get('/', async (req, res) => {
     const allReviewImages = await ReviewImage.findAll({})
 
-    return res.json({ReviewImages: allReviewImages})
+    return res.json({ ReviewImages: allReviewImages })
 })
 
 module.exports = router;
