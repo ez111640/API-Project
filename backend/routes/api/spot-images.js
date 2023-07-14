@@ -8,8 +8,18 @@ const {  restoreUser } = require('../../utils/auth');
 
 const router = express.Router();
 
-router.delete('/:imageId', async(req, res) => {
+router.delete('/:imageId', requireAuth, async(req, res) => {
     const thisImage = await SpotImage.findByPk(req.params.imageId)
+
+    const thisSpot = await Spot.findByPk(thisImage.spotId)
+
+    if(thisSpot.userId !== req.user.id){
+        res.status(401)
+        return res.json({
+            message: "Unauthorized action"
+        })
+    }
+
     if(thisImage) {
         await thisImage.destroy()
         return res.json({ message: 'Successfully deleted'})

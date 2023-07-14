@@ -27,15 +27,31 @@ router.get('/current', requireAuth, async (req, res) => {
         },
         include: [{
             model: User,
-            attributes: ['id','firstName','lastName'],
-        },{
+            attributes: ['id', 'firstName', 'lastName'],
+        }, {
             model: Spot,
-        },{
+            include: [{
+                model: SpotImage,
+                attributes: ['url'],
+                as: 'previewImage',
+                where: {
+                    preview: true
+                }
+            }]
+        }, {
             model: ReviewImage,
         }]
     })
 
-    return res.json(allReviews)
+    const reviewArr = allReviews.map(review => {
+        const thisReview = review.toJSON();
+        if(thisReview.Spot.previewImage) {
+            thisReview.Spot.previewImage = thisReview.Spot.previewImage[0].url
+        }
+        return thisReview;
+    })
+
+    return res.json(reviewArr)
 })
 
 router.post('/:reviewId/images', requireAuth, async (req, res) => {
@@ -44,15 +60,30 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
     const id = parseInt(req.params.reviewId)
     const maxImages = 10;
 
-    const review = await Review.findAll({
+
+    const review = await Review.findByPk(id);
+
+    if (review === null) {
+        res.status(404)
+        res.json({
+            message: "Review wasn't found"
+        })
+    }
+
+    if (review.userId !== userId) {
+        res.status(401)
+        res.json({
+            message: "You can only add images to your own reviews"
+        })
+    }
+
+    const reviewImageCount = await ReviewImage.count({
         where: {
-            id: id,
-            userId: userId
+            reviewId: review.id
         }
     })
-    const reviewImageCount = await ReviewImage.count()
 
-    if (reviewImageCount.length >= maxImages) {
+    if (reviewImageCount >= maxImages) {
         res.status(403)
         const err = new Error("You have exceeded the maximum number of images")
         err.errors = {
@@ -103,13 +134,22 @@ router.put('/:reviewId', requireAuth, async (req, res) => {
 
     const { review, stars } = req.body
 
+    if (!review && !stars) {
+        res.status(400)
+        res.json({
+            message: "You have to edit the review or the number of stars"
+        })
+    }
+
     if (review) thisReview.review = review
     if (stars) thisReview.stars = stars
+
+
 
     await thisReview.save()
 
     await thisReview.validate()
-        return res.json(thisReview)
+    return res.json(thisReview)
 
 
 
@@ -131,6 +171,11 @@ router.delete('/:reviewId', requireAuth, async (req, res) => {
     }
 })
 
+router.get('/', async (req, res) => {
+    const allReviews = await Review.findAll({})
+
+    return res.json({ Reviews: allReviews })
+})
 
 
 

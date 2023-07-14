@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     /**
      * Add seed commands here.
      *
@@ -21,19 +21,61 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-   await ReviewImage.bulkCreate([
-     {
-      'reviewId': '1',
-      'url': 'www.thisurl.com'
-    },
-    {
-      'reviewId': '1',
-      'url': 'www.someotherurl.com'
-    }
-   ], {validate: true})
+    await ReviewImage.bulkCreate([
+      {
+        'reviewId': '1',
+        'url': 'www.thisurl.com'
+      },
+      {
+        'reviewId': '1',
+        'url': 'www.someotherurl.com'
+      },
+      {
+        'reviewId': '2',
+        'url': 'www.thisurl.com'
+      },
+      {
+        'reviewId': '2',
+        'url': 'www.someotherurl.com'
+      },
+      {
+        'reviewId': '3',
+        'url': 'www.thisurl.com'
+      },
+      {
+        'reviewId': '3',
+        'url': 'www.someotherurl.com'
+      },
+
+      {
+        'reviewId': '4',
+        'url': 'www.thisurl.com'
+      },
+      {
+        'reviewId': '4',
+        'url': 'www.someotherurl.com'
+      },
+
+      {
+        'reviewId': '5',
+        'url': 'www.thisurl.com'
+      },
+      {
+        'reviewId': '5',
+        'url': 'www.someotherurl.com'
+      },
+      {
+        'reviewId': '6',
+        'url': 'www.thisurl.com'
+      },
+      {
+        'reviewId': '6',
+        'url': 'www.someotherurl.com'
+      },
+    ], { validate: true })
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     /**
      * Add commands to revert seed here.
      *
@@ -42,11 +84,6 @@ module.exports = {
      */
 
     options.tableName = ('ReviewImages');
-    const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
-      id: {
-        [Op.in]:[1,2]
-      }
-    },{})
+    return queryInterface.bulkDelete(options)
   }
 };

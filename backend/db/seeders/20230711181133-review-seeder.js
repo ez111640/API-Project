@@ -11,17 +11,20 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
 
     await Review.bulkCreate([
+      {
+        'spotId': '1',
+        'userId': '1',
+        'review': 'It was nice!',
+        'stars': '2'
+      },
+      {
+        'spotId': '1',
+        'userId': '1',
+        'review': 'It was nice!',
+        'stars': '4'
+      },
       {
         'spotId': '2',
         'userId': '1',
@@ -31,27 +34,52 @@ module.exports = {
       {
         'spotId': '2',
         'userId': '1',
-        'review': 'It was great',
+        'review': 'It was nice!',
         'stars': '5'
-      }
+      },
+      {
+        'spotId': '3',
+        'userId': '2',
+        'review': 'It was nice!',
+        'stars': '3'
+      },
+      {
+        'spotId': '3',
+        'userId': '2',
+        'review': 'It was nice!',
+        'stars': '4'
+      },
+      {
+        'spotId': '4',
+        'userId': '2',
+        'review': 'It was nice!',
+        'stars': '4'
+      },
+      {
+        'spotId': '4',
+        'userId': '2',
+        'review': 'It was nice!',
+        'stars': '4'
+      },
+      {
+        'spotId': '5',
+        'userId': '3',
+        'review': 'It was nice!',
+        'stars': '2'
+      },
+      {
+        'spotId': '5',
+        'userId': '3',
+        'review': 'It was nice!',
+        'stars': '4'
+      },
 
     ], { validate: true })
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
 
     options.tableName = ('Reviews');
-    const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
-      id: {
-        [Op.in]: [1, 2]
-      }
-    }, {})
+    return queryInterface.bulkDelete(options)
   }
 };

@@ -21,8 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         {
           foreignKey: 'ownerId',
           onDelete: 'CASCADE',
-          hooks: true,
-          as: 'ownerId'
+          hooks: true
         }
       )
       User.hasMany(

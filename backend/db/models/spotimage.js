@@ -13,8 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       SpotImage.belongsTo(
         models.Spot,
         {
-          foreignKey: 'spotId'
-        }
+          foreignKey: 'spotId',
+          as: 'previewImage'
+        },
+
       )
     }
   }

@@ -27,21 +27,72 @@ module.exports = {
         'url': 'www.moreurls.com',
         'preview': 'true'
       },
-      {
-        'spotId': '1',
+      {'spotId': '1',
         'url': 'www.nopreviewurl.com',
         'preview': 'false'
       },
-      {
-        'spotId': '2',
+      {'spotId': '1',
         'url' : 'www.urlurl.com',
         'preview': 'false'
       },
-      {
-        'spotId': '2',
+      {'spotId': '2',
+        'url' : 'www.aurlhere.com',
+        'preview' : 'false'
+      },
+      {'spotId': '2',
         'url' : 'www.aurlhere.com',
         'preview' : 'true'
       }
+      ,
+      {'spotId': '2',
+        'url' : 'www.aurlhere.com',
+        'preview' : 'false'
+      }
+      ,
+      {'spotId': '3',
+        'url' : 'www.aurlhere.com',
+        'preview' : 'false'
+      }
+      ,
+      {'spotId': '3',
+        'url' : 'www.aurlhere.com',
+        'preview' : 'false'
+      }
+      ,
+      {'spotId': '3',
+        'url' : 'www.aurlhere.com',
+        'preview' : 'true'
+      }
+      ,
+      {'spotId': '4',
+        'url' : 'www.aurlhere.com',
+        'preview' : 'true'
+      }
+      ,
+      {'spotId': '4',
+        'url' : 'www.aurlhere.com',
+        'preview' : 'false'
+      }
+      ,
+      {'spotId': '4',
+        'url' : 'www.aurlhere.com',
+        'preview' : 'false'
+      }
+      ,
+      {'spotId': '5',
+        'url' : 'www.aurlhere.com',
+        'preview' : 'true'
+      }
+      ,
+      {'spotId': '5',
+        'url' : 'www.aurlhere.com',
+        'preview' : 'false'
+      }
+      ,
+      {'spotId': '5',
+        'url' : 'www.aurlhere.com',
+        'preview' : 'false'
+      },
     ],{validate: true})
   },
 
@@ -54,11 +105,6 @@ module.exports = {
      */
 
     options.tableName = ('SpotImages');
-    const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
-      id: {
-        [Op.in]: [1,2]
-      }
-    },{})
+    return queryInterface.bulkDelete(options)
   }
 };

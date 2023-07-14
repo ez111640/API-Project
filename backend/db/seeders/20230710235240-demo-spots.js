@@ -10,39 +10,110 @@ if (process.env.NODE_ENV === 'production') {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
 
     await Spot.bulkCreate([
       {
-        ownerId: 1,
-        address: '1234 This Street',
+        onwerId: 1,
+        address: '1111 This Street',
         city: 'Our City',
         state: 'WV',
         country: 'United States',
         lat: '82.34',
         lng: '123.5',
-        name: 'First Spot',
-        description: 'A lovely first Air BnB Spot',
+        name: 'Spot One Owner 1',
+        description: 'The first Air BnB Spot',
         price: '124.55'
       },
+
       {
-        ownerId: 1,
-        address: '1234 This Street',
+        onwerId: 1,
+        address: '2222 This Street',
         city: 'Our City',
         state: 'WV',
         country: 'United States',
         lat: '82.34',
         lng: '123.5',
-        name: 'First Spot',
-        description: 'A lovely first Air BnB Spot',
+        name: 'Spot 2 Owner 1',
+        description: 'The first Air BnB Spot',
+        price: '124.55'
+      },
+
+
+      {
+        onwerId: 2,
+        address: '3333 This Street',
+        city: 'Our City',
+        state: 'WV',
+        country: 'United States',
+        lat: '82.34',
+        lng: '123.5',
+        name: 'Spot 3 Owner 2',
+        description: 'The first Air BnB Spot',
+        price: '124.55'
+      },
+
+      {
+        onwerId: 2,
+        address: '4444 This Street',
+        city: 'Our City',
+        state: 'WV',
+        country: 'United States',
+        lat: '82.34',
+        lng: '123.5',
+        name: 'Spot 4 Owner 2',
+        description: 'The first Air BnB Spot',
+        price: '124.55'
+      },
+
+      {
+        onwerId: 3,
+        address: '5555 This Street',
+        city: 'Our City',
+        state: 'WV',
+        country: 'United States',
+        lat: '82.34',
+        lng: '123.5',
+        name: 'Spot 5 Owner 3',
+        description: 'The first Air BnB Spot',
+        price: '124.55'
+      },
+
+      {
+        onwerId: 3,
+        address: '6666 This Street',
+        city: 'Our City',
+        state: 'WV',
+        country: 'United States',
+        lat: '82.34',
+        lng: '123.5',
+        name: 'Spot 6 Owner 3',
+        description: 'The first Air BnB Spot',
+        price: '124.55'
+      },
+
+      {
+        onwerId: 4,
+        address: '7777 This Street',
+        city: 'Our City',
+        state: 'WV',
+        country: 'United States',
+        lat: '82.34',
+        lng: '123.5',
+        name: 'Spot 7 Owner 4',
+        description: 'The first Air BnB Spot',
+        price: '124.55'
+      },
+
+      {
+        onwerId: 4,
+        address: '8888 This Street',
+        city: 'Our City',
+        state: 'WV',
+        country: 'United States',
+        lat: '82.34',
+        lng: '123.5',
+        name: 'Spot 4 Owner 8',
+        description: 'The first Air BnB Spot',
         price: '124.55'
       },
     ], {
@@ -51,18 +122,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
     options.tableName = ('Spots');
-    const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
-      name: {
-        [Op.in]: ['First Spot', 'Second Spot', 'Third Spot']
-      }
-    }, {})
+    return queryInterface.bulkDelete(options)
   }
 };

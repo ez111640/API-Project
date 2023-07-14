@@ -8,22 +8,25 @@ const {  restoreUser } = require('../../utils/auth');
 
 const router = express.Router();
 
-router.delete('/:imageId', async(req, res) => {
+router.delete('/:imageId', requireAuth, async(req, res) => {
     const thisImage = await ReviewImage.findByPk(req.params.imageId)
     if(thisImage) {
         await thisImage.destroy()
         return res.json({ message: 'Successfully deleted'})
     }
-    if (thisImage === null) {
         const err = new Error("Image couldn't be found")
         res.status(404)
         err.errors = {
             message: "That image couldn't be found"
         }
         return res.json(err.errors)
-    }
 
-    
+})
+
+router.get('/', async(req, res) => {
+    const allReviewImages = await ReviewImage.findAll({})
+
+    return res.json({ReviewImages: allReviewImages})
 })
 
 module.exports = router;
