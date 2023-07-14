@@ -63,7 +63,28 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
         return res.json(err.errors)
     }
 
+    const bookings = await Booking.findAll({
+        where: {
+            spotId: thisBooking.toJSON().spotId
+        }
+    })
 
+    const bookingArr = bookings.map(booking => {
+        const thisBooking = booking.toJSON()
+        if(thisBooking.startDate < endDate &&  thisBooking.startDate > endDate){
+            res.status(403)
+            res.json({
+                message: "Booking conflict"
+            })
+        }
+        if(thisBooking.endDate < startDate && thisBooking.endDate > endDate){
+            res.status(403)
+            res.json({
+                message: "Booking conflict"
+            })
+        }
+        return thisBooking
+    })
 
 
     if (startDate) thisBooking.startDate = startDate
