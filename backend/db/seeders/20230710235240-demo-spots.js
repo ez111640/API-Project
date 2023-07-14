@@ -13,7 +13,8 @@ module.exports = {
 
     await Spot.bulkCreate([
       {
-        onwerId: 1,
+
+        onwnerId: 1,
         address: '1111 This Street',
         city: 'Our City',
         state: 'WV',
@@ -26,7 +27,7 @@ module.exports = {
       },
 
       {
-        onwerId: 1,
+        ownerId: 1,
         address: '2222 This Street',
         city: 'Our City',
         state: 'WV',
@@ -40,7 +41,7 @@ module.exports = {
 
 
       {
-        onwerId: 2,
+        ownerId: 2,
         address: '3333 This Street',
         city: 'Our City',
         state: 'WV',
@@ -53,7 +54,7 @@ module.exports = {
       },
 
       {
-        onwerId: 2,
+        ownerId: 2,
         address: '4444 This Street',
         city: 'Our City',
         state: 'WV',
@@ -66,7 +67,7 @@ module.exports = {
       },
 
       {
-        onwerId: 3,
+        ownrId: 3,
         address: '5555 This Street',
         city: 'Our City',
         state: 'WV',
@@ -79,7 +80,7 @@ module.exports = {
       },
 
       {
-        onwerId: 3,
+        ownerId: 3,
         address: '6666 This Street',
         city: 'Our City',
         state: 'WV',
@@ -92,7 +93,7 @@ module.exports = {
       },
 
       {
-        onwerId: 4,
+        ownerId: 4,
         address: '7777 This Street',
         city: 'Our City',
         state: 'WV',
@@ -105,7 +106,7 @@ module.exports = {
       },
 
       {
-        onwerId: 4,
+        onwnerId: 4,
         address: '8888 This Street',
         city: 'Our City',
         state: 'WV',
