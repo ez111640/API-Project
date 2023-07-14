@@ -113,7 +113,14 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 
 router.delete('/:bookingId', requireAuth, async (req, res) => {
     const thisBooking = await Booking.findByPk(req.params.bookingId)
-
+    if (thisBooking === null) {
+        const err = new Error("Booking wasn't found")
+        res.status(404)
+        err.errors = {
+            message: "Booking couldn't be found"
+        }
+        return res.json(err.errors)
+    }
     const thisSpot = await Spot.findByPk(thisBooking.spotId)
 
     if(thisBooking.userId !== req.user.id && thisSpot.ownerId !== req.user.id){
@@ -131,14 +138,7 @@ router.delete('/:bookingId', requireAuth, async (req, res) => {
         })
     }
 
-    if (thisBooking === null) {
-        const err = new Error("Booking wasn't found")
-        res.status(404)
-        err.errors = {
-            message: "Booking couldn't be found"
-        }
-        return res.json(err.errors)
-    }
+
     if (thisBooking.userId !== req.user.id) {
         res.status(500)
         res.json({

@@ -151,6 +151,7 @@ router.get('/:spotId/reviews', async (req, res) => {
 router.get('/:spotId/bookings', requireAuth, async (req, res) => {
     const thisId = parseInt(req.params.spotId)
 
+
     const spot = await Spot.findByPk(thisId)
 
     if (!spot) {
@@ -159,6 +160,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
             message: "Spot couldn't be found"
         })
     }
+
     const nonOwnerBookings = await Booking.findAll({
         where: {
             spotId: thisId,
@@ -299,14 +301,19 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         const bookedEnd = new Date(thisBooking.endDate.toDateString())
         const end = new Date(endDate).getTime();
 
-        if (start > bookedStart && start < bookedEnd) {
+        console.log(bookedStart)
+        console.log(start)
+        console.log(bookedEnd)
+        console.log(end)
+
+        if (start >= bookedStart && start <= bookedEnd) {
             res.status(403)
             return res.json({
                 message: "Sorry, this spot is already booked for the specified dates"
 
             })
         }
-        if (end > bookedStart && end < bookedEnd) {
+        if (end >= bookedStart && end <= bookedEnd) {
             res.status(403)
             return res.json({
                 message: "Sorry, this spot is already booked for the specified dates"
@@ -339,6 +346,11 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
 router.delete('/:spotId', requireAuth, async (req, res) => {
     const thisSpot = await Spot.findByPk(req.params.spotId)
 
+    if (!thisSpot) {
+        res.status(404)
+        res.json({ message: "Spot not found" })
+    }
+
     if (thisSpot.ownerId !== req.user.id) {
         res.status(403)
         return res.json({ message: "Forbidden" });
@@ -349,10 +361,7 @@ router.delete('/:spotId', requireAuth, async (req, res) => {
         await thisSpot.destroy();
         return res.json({ message: 'Successfully deleted' })
     }
-    if (!thisSpot) {
-        res.status(404)
-        res.json({ message: "Spot not found" })
-    }
+
 
 })
 
