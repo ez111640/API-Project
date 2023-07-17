@@ -545,13 +545,11 @@ router.get('/', validateQueries, async (req, res) => {
             sum += review.stars
         }
         thisSpot.avgRating = sum / count;
-        thisSpot.page = page;
-        thisSpot.size = size;
         return thisSpot
     })
 
 
-    return res.json({ Spots: spotsArr })
+    return res.json({ Spots: spotsArr, page, size })
 
 })
 module.exports = router;
