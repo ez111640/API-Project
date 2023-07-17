@@ -32,7 +32,7 @@ router.post(
         if (!credential) {
             const err = new Error('Bad Request');
             err.status = 400;
-            err.errors = { credential: 'Email or username is required' }
+            err.errors = { credential: "Email or username is required" }
             return next(err)
         }
         if (!password) {

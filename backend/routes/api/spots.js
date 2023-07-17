@@ -78,12 +78,12 @@ const validateQueries = [
 
 const validateReviews = [
     check('review')
-    .exists({ checkFalsy: true })
-    .withMessage("Review text is required"),
+        .exists({ checkFalsy: true })
+        .withMessage("Review text is required"),
     check('stars')
-    .exists ({ checkFalsy: true })
-    .isInt({min: 1, max: 5})
-    .withMessage("Stars must be an integer from 1 to 5"),
+        .exists({ checkFalsy: true })
+        .isInt({ min: 1, max: 5 })
+        .withMessage("Stars must be an integer from 1 to 5"),
     handleValidationErrors
 ]
 
@@ -145,7 +145,7 @@ router.get('/:spotId/reviews', async (req, res) => {
         })
     }
 
-    return res.json({Reviews: allReviews});
+    return res.json({ Reviews: allReviews });
 })
 
 router.get('/:spotId/bookings', requireAuth, async (req, res) => {
@@ -177,8 +177,8 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
         }
     })
 
-    if (spot.ownerId !== req.user.id) return res.json({Bookings: nonOwnerBookings})
-    return res.json({Bookings: ownerBookings})
+    if (spot.ownerId !== req.user.id) return res.json({ Bookings: nonOwnerBookings })
+    return res.json({ Bookings: ownerBookings })
 })
 
 router.post('/:spotId/reviews', requireAuth, validateReviews, async (req, res, next) => {
@@ -529,11 +529,14 @@ router.get('/', validateQueries, async (req, res) => {
         offset: size * (page - 1)
     })
 
+
     const spotsArr = allSpots.map(spot => {
         const thisSpot = spot.toJSON();
 
         if (thisSpot.previewImage) {
             thisSpot.previewImage = thisSpot.previewImage[0].url
+        } else {
+            thisSpot.previewImage = null;
         }
         let sum = 0;
         let count = 0;
