@@ -11,12 +11,12 @@ const router = express.Router();
 
 const validateReviews = [
     check('review')
-    .exists({ checkFalsy: true })
-    .withMessage("Review text is required"),
+        .exists({ checkFalsy: true })
+        .withMessage("Review text is required"),
     check('stars')
-    .exists ({ checkFalsy: true })
-    .isInt({min: 1, max: 5})
-    .withMessage("Stars must be an integer from 1 to 5"),
+        .exists({ checkFalsy: true })
+        .isInt({ min: 1, max: 5 })
+        .withMessage("Stars must be an integer from 1 to 5"),
     handleValidationErrors
 ]
 
@@ -31,21 +31,21 @@ router.get('/current', requireAuth, async (req, res) => {
             attributes: ['id', 'firstName', 'lastName'],
         }, {
             model: Spot,
+            attributes: [
+                'id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price'
+            ],
             include: [{
                 model: SpotImage,
-                attributes: ['url'],
-                as: 'previewImage',
-                where: {
-                    preview: true
-                }
+                attributes: ['id', 'url', 'preview'],
+                as: 'previewImage'
             }]
         }, {
             model: ReviewImage,
-            attributes: ['id','url']
+            attributes: ['id', 'url']
         }]
     })
 
-    if(!allReviews.length){
+    if (!allReviews.length) {
         req.status(404)
         return res.json({
             message: "No reviews found"
@@ -54,12 +54,26 @@ router.get('/current', requireAuth, async (req, res) => {
     if (allReviews.length) {
         const reviewArr = allReviews.map(review => {
             const thisReview = review.toJSON();
-            if (thisReview.Spot && thisReview.Spot.previewImage) {
-                thisReview.Spot.previewImage = thisReview.Spot.previewImage[0].url
+            if (thisReview.Spot) {
+                let foundPreview = false
+
+                for (let image of thisReview.Spot.previewImage) {
+                    if (image.preview = true) {
+                        thisReview.Spot.previewImage = image.url
+                        foundPreview = true
+                    }
+                }
+                if (!foundPreview) {
+                    thisReview.Spot.previewImage = "No preview available";
+                }
+
+                if(!thisReview.ReviewImages.length) {
+                    thisReview.ReviewImages = "There are no images associated with this review"
+                }
             }
             return thisReview;
         })
-        return res.json({Reviews: reviewArr})
+        return res.json({ Reviews: reviewArr })
     }
 })
 
@@ -97,7 +111,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
         res.status(403)
         const err = new Error("You have exceeded the maximum number of images")
         err.errors = {
-            message: "There are already 10 images. You cannot add any more."
+            message: "Maximum number of images for this resource was reached"
         }
         return res.json(err.errors);
     }
@@ -168,9 +182,9 @@ router.put('/:reviewId', requireAuth, validateReviews, async (req, res) => {
 
 router.delete('/:reviewId', requireAuth, async (req, res) => {
     const thisReview = await Review.findByPk(req.params.reviewId)
-    if(thisReview && thisReview.userId !== req.user.id){
+    if (thisReview && thisReview.userId !== req.user.id) {
         res.status(403)
-        return res.json({message: "Forbidden"})
+        return res.json({ message: "Forbidden" })
     }
 
     if (thisReview) {
@@ -181,7 +195,7 @@ router.delete('/:reviewId', requireAuth, async (req, res) => {
         const err = new Error("Review couldn't be found")
         res.status(404)
         err.errors = {
-            message: "That Review couldn't be found"
+            message: "Review couldn't be found"
         }
         return res.json(err.errors)
     }

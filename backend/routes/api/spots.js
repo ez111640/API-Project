@@ -88,6 +88,7 @@ const validateReviews = [
 ]
 
 
+
 router.get('/current', requireAuth, async (req, res) => {
 
     const ownerId = parseInt(req.user.id)
@@ -102,16 +103,31 @@ router.get('/current', requireAuth, async (req, res) => {
         }]
     })
 
-    //stay away from forEach
 
     const retArr = spots.map(spot => {
         const thisSpot = spot.toJSON()
-        // if (thisSpot.previewImage) {
-        //     thisSpot.previewImage = thisSpot.previewImage[0].url
-        // }
+
+        if (thisSpot) {
+            let foundPreview = false
+
+            for (let image of thisSpot.previewImage) {
+                if (image.preview = true) {
+                    thisSpot.previewImage = image.url
+                    foundPreview = true
+                }
+            }
+            if (!foundPreview) {
+                thisSpot.previewImage = "No preview available";
+            }
+        }
+
         const revCount = Review.count();
         const revSum = Review.sum('stars');
         thisSpot.avgRating = revCount / revSum
+
+        if(!thisSpot.avgRating){
+            thisSpot.avgRating = "There are no reviews for this spot yet"
+        }
         return thisSpot
     })
 
@@ -145,7 +161,17 @@ router.get('/:spotId/reviews', async (req, res) => {
         })
     }
 
-    return res.json({ Reviews: allReviews });
+    const revArr = allReviews.map(review => {
+        const thisReview = review.toJSON();
+
+        if (!thisReview.ReviewImages.length) {
+            thisReview.ReviewImages = "There are no images associated with this review"
+        }
+
+        return thisReview
+    })
+
+    return res.json({ Reviews: revArr });
 })
 
 router.get('/:spotId/bookings', requireAuth, async (req, res) => {
@@ -164,6 +190,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
     const nonOwnerBookings = await Booking.findAll({
         where: {
             spotId: thisId,
+
         },
         attributes: ['spotId', 'startDate', 'endDate'],
     })
@@ -177,8 +204,10 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
         }
     })
 
-    if (spot.ownerId !== req.user.id) return res.json({ Bookings: nonOwnerBookings })
-    return res.json({ Bookings: ownerBookings })
+    if (spot.ownerId !== req.user.id)  thisBooking = nonOwnerBookings;
+    else thisBooking = ownerBookings
+
+    return res.json({ Bookings: thisBooking })
 })
 
 router.post('/:spotId/reviews', requireAuth, validateReviews, async (req, res, next) => {
@@ -271,6 +300,13 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
 
     const spot = await Spot.findByPk(id)
 
+    if(!startDate || !endDate){
+        res.status(400);
+        return res.json({
+            message: "Start and end date are required"
+        })
+    }
+
 
     if (spot === null) {
         res.status(404)
@@ -283,6 +319,16 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         res.status(403)
         return res.json({
             message: "Forbidden"
+        })
+    }
+
+    const start = new Date(startDate).getTime();
+    const end = new Date(endDate).getTime();
+
+    if (end < start) {
+        res.status(400)
+        return res.json({
+            "message": "endDate cannot be on or before startDate"
         })
     }
 
@@ -300,11 +346,6 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         const start = new Date(startDate).getTime();
         const bookedEnd = new Date(thisBooking.endDate.toDateString())
         const end = new Date(endDate).getTime();
-
-        console.log(bookedStart)
-        console.log(start)
-        console.log(bookedEnd)
-        console.log(end)
 
         if (start >= bookedStart && start <= bookedEnd) {
             res.status(403)
@@ -344,11 +385,15 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
 
 
 router.delete('/:spotId', requireAuth, async (req, res) => {
+
+
     const thisSpot = await Spot.findByPk(req.params.spotId)
+    console.log(thisSpot.ownerId)
+    console.log(req.user.id)
 
     if (!thisSpot) {
         res.status(404)
-        res.json({ message: "Spot not found" })
+        res.json({ message: "Spot couldn't be found" })
     }
 
     if (thisSpot.ownerId !== req.user.id) {
@@ -426,7 +471,7 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
         res.status(404)
         const err = new Error("Spot not found")
         err.errors = {
-            message: "That spot wasn't found"
+            message: "Spot couldn't be found"
         }
         return res.json(err.errors);
     }
@@ -515,16 +560,17 @@ router.get('/', validateQueries, async (req, res) => {
     }
 
     const allSpots = await Spot.findAll({
-        include: [{
-            model: SpotImage,
-            as: 'previewImage',
-            where: { preview: true }
-        },
-        {
-            model: Review,
-            attributes: ['stars'],
-            as: 'avgRating'
-        }],
+        include: [
+            {
+                model: Review,
+                attributes: ['stars'],
+                as: 'avgRating'
+            },
+            {
+                model: SpotImage,
+                attributes: ['url'],
+                as: 'previewImage'
+            }],
         limit: size,
         offset: size * (page - 1)
     })
@@ -532,12 +578,18 @@ router.get('/', validateQueries, async (req, res) => {
 
     const spotsArr = allSpots.map(spot => {
         const thisSpot = spot.toJSON();
+        let foundPreview = false
 
-        if (thisSpot.previewImage) {
-            thisSpot.previewImage = thisSpot.previewImage[0].url
-        } else {
-            thisSpot.previewImage = null;
+        for (let image of thisSpot.previewImage) {
+            if (image.preview = true) {
+                thisSpot.previewImage = image.url
+                foundPreview = true
+            }
         }
+        if (!foundPreview) {
+            thisSpot.previewImage = "No preview available";
+        }
+
         let sum = 0;
         let count = 0;
         for (let review of thisSpot.avgRating) {
@@ -545,6 +597,9 @@ router.get('/', validateQueries, async (req, res) => {
             sum += review.stars
         }
         thisSpot.avgRating = sum / count;
+        if (!thisSpot.avgRating) {
+            thisSpot.avgRating = "No reviews for this spot yet"
+        }
         return thisSpot
     })
 

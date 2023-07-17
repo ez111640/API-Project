@@ -61,6 +61,7 @@ router.post('/', validateSignup, async (req, res, next) => {
         err.errors = {
             message: 'User already exists'
         }
+        err.stack = null;
         return next(err)
     }
 

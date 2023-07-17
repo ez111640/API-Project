@@ -15,34 +15,44 @@ router.get('/current', requireAuth, async (req, res) => {
         where: { userId: userId },
         include: [{
             model: Spot,
-            attributes: ['id','ownerId','address','city','state','country','lat','lng','name','price'],
+            attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price'],
             include: [{
                 model: SpotImage,
-                attributes: ['url'],
-                as: 'previewImage',
-                where: {
-                    preview: true
-                }
+                attributes: ['id','url','preview'],
+                as: 'previewImage'
             }]
         }]
     })
 
     const bookArr = bookingsArr.map(booking => {
         const thisBook = booking.toJSON()
+
+
         if (thisBook.Spot) {
-            if (thisBook.Spot.previewImage) {
-                thisBook.Spot.previewImage = thisBook.Spot.previewImage[0]
+            let foundPreview = false
+
+            for (let image of thisBook.Spot.previewImage) {
+                if (image.preview = true) {
+                    thisBook.Spot.previewImage = image.url
+                    foundPreview = true
+                }
+            }
+            if (!foundPreview) {
+                thisBook.Spot.previewImage = "No preview available";
             }
         }
+
         return thisBook
     })
 
-    return res.json({Bookings: bookArr})
+    return res.json({ Bookings: bookArr })
 
 })
 
 router.put('/:bookingId', requireAuth, async (req, res) => {
     const thisBooking = await Booking.findByPk(req.params.bookingId)
+
+
 
     if (!thisBooking) {
         res.status(404)
@@ -53,12 +63,14 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
         return res.json(err.errors)
     }
 
-    if(thisBooking.userId !== req.user.id){
+    if (thisBooking.userId !== req.user.id) {
         res.status(403)
         return res.json({
             message: "Forbidden"
         })
     }
+
+
 
     const currentDate = new Date();
 
@@ -69,14 +81,29 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
 
     if (today > end) {
         res.status(400)
-        res.json({
+        return res.json({
             message: "Past bookings can't be modified"
         })
     }
     const { startDate, endDate } = req.body;
 
+    if(!startDate || !endDate){
+        res.status(400);
+        return res.json({
+            message: "You must enter a start date or end date"
+        })
+    }
 
 
+    const startDay = new Date(startDate).getTime();
+    const endDay = new Date(endDate).getTime();
+
+    if (endDay < startDay) {
+        res.status(400)
+        return res.json({
+            "message": "endDate cannot be on or before startDate"
+        })
+    }
 
     const bookings = await Booking.findAll({
         where: {
@@ -123,7 +150,7 @@ router.delete('/:bookingId', requireAuth, async (req, res) => {
     }
     const thisSpot = await Spot.findByPk(thisBooking.spotId)
 
-    if(thisBooking.userId !== req.user.id && thisSpot.ownerId !== req.user.id){
+    if (thisBooking.userId !== req.user.id && thisSpot.ownerId !== req.user.id) {
         res.status(403)
         return res.json({
             message: "Forbidden"
