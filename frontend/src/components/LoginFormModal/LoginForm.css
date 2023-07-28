@@ -1,0 +1,16 @@
+form {
+    font-size: 22px;
+    display: block;
+
+
+}
+
+button, h2, label {
+    display: flex;
+}
+
+button {
+    background-color: grey;
+    margin-left: auto;
+    margin-right: auto;
+}

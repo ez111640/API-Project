@@ -1,0 +1,27 @@
+li {
+    list-style-type: none;
+}
+
+ul {
+    display: block;
+    margin-left: 15px;
+    margin-right: 40px
+}
+
+.leftNav{
+    float: left;
+    color: #ff385c;
+
+}
+
+.rightNav{
+    float: right;
+}
+
+a:link{
+    text-decoration: none;
+}
+
+a{
+    color: #ff385c
+}
