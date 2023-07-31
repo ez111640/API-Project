@@ -11,11 +11,11 @@ function Navigation({ isLoaded }){
     <ul>
       <li className = "leftNav">
       <i className="fa-brands fa-airbnb"></i>
-        <NavLink exact to="/"><span className="logo">airbnb</span></NavLink>
+        <NavLink exact to="/">airbnb</NavLink>
       </li>
       {isLoaded && (
         <li className = "rightNav">
-          <ProfileButton user={sessionUser} />
+          <span className = "floatRight"><ProfileButton user={sessionUser} /></span>
         </li>
       )}
     </ul>

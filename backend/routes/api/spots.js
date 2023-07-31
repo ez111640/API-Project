@@ -498,7 +498,7 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
 
     await spot.save();
 
-    res.json(spot)
+    return res.json(spot)
 })
 
 router.post('/', requireAuth, validateSpot, async (req, res, next) => {

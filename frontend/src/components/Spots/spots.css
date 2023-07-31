@@ -1,0 +1,14 @@
+ul {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+li {
+    display: inline-block;
+    margin: 10px;
+}
+
+.spotDetailHeader{
+    display: flex;
+
+}
