@@ -1,29 +1,32 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom"
-import { getAllSpots } from "../../store/spots";
+import { getOneSpot } from "../../store/spots";
 
 
-function SpotsDetail ({spots}) {
+function SpotsDetail () {
     const dispatch = useDispatch();
-    const allSpots = useSelector((state) => state.spotsState.spots)
     const {spotId} = useParams();
+    const allSpots = useSelector((state) => state.spotsState)
 
-    const spotsArr = Object.values(allSpots)
 
-    const spot = spotsArr[spotId -1]
+    const spot = allSpots.spot
+    let prevImage
+    if(spot) prevImage = spot.previewImage
+
 
     useEffect(()=> {
-        dispatch(getAllSpots());
-    }, [dispatch])
+        dispatch(getOneSpot(spotId));
+    }, [dispatch, spotId])
 
-    console.log(spot)
+    if(!spot) return null
 
     return (
         <>
         <h1>Spots Detail</h1>
         <h2>{spotId}</h2>
-        <h3>{spot && spot.name}</h3>
+        <h3>{spot.name}</h3>
+
         </>
     )
 }

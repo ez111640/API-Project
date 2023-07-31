@@ -6,7 +6,6 @@ import {Switch, Route, Link} from 'react-router-dom'
 import SpotsDetail from './SpotsDetail.js';
 import "./spots.css"
 
-
 function SpotsIndex () {
     const dispatch = useDispatch();
     const allSpots = useSelector((state)=>(
@@ -20,12 +19,13 @@ function SpotsIndex () {
     }, [dispatch])
 
 
-
     return(
         <div>
     <ul>
         {spotsArr && spotsArr.map(spot => (
+            <div>
             <li><Link to={`/spots/${spot.id}`}>{spot.name}</Link></li>
+            </div>
         ))}
     </ul>
     </div>)
