@@ -1,10 +1,11 @@
 .spot-list {
-    width: 90%;
+    width: fit-content
 }
 
 
 ul {
     margin: 30px;
+
     padding: 0px;
     display: flex;
     flex-direction: row;
@@ -18,7 +19,7 @@ ul {
 }
 
 .prevImage {
-    width: 260px;
+    width: 295px;
     height: 250px;
     object-fit: cover;
     border-radius: 10px;
@@ -153,6 +154,3 @@ ul {
     justify-content: center;
     padding-bottom: 20px;
 }
-
-
-
