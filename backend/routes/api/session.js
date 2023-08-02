@@ -30,13 +30,13 @@ router.post(
         const { credential, password } = req.body;
 
         if (!credential) {
-            const err = new Error('Bad Request');
+            const err = new Error('Bad Request - Credential');
             err.status = 400;
             err.errors = { credential: "Email or username is required" }
             return next(err)
         }
         if (!password) {
-            const err = new Error('Bad Request');
+            const err = new Error('Bad Request- Password');
             err.status = 400;
             err.errors = { password: 'Password is required' }
             return next(err)

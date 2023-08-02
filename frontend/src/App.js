@@ -5,6 +5,9 @@ import * as sessionActions from './store/session'
 import Navigation from './components/Navigation'
 import SpotsIndex from './components/Spots/index'
 import SpotsDetail from './components/Spots/SpotsDetail'
+import SpotForm from './components/Spots/SpotForm'
+import ReviewIndex from './components/Reviews/ReviewIndex'
+import "./index.css"
 
 function App() {
   const dispatch = useDispatch();
@@ -15,19 +18,28 @@ function App() {
   },[dispatch])
 
   return (
-    <>
+    < div className = "root">
     <Navigation isLoaded={isLoaded}/>
     {isLoaded && (
       <Switch>
         <Route exact path ="/">
             < SpotsIndex />
         </Route>
+        <Route path ='/spots/new'>
+          <SpotForm />
+        </Route>
+        <Route path ='/spots/edit'>
+          <SpotForm />
+        </Route>
+        <Route path ='/spots/:spotId/reviews'>
+          <ReviewIndex />
+          </Route>
         <Route path = '/spots/:spotId'>
             <SpotsDetail />
         </Route>
     </Switch>
 )}
-</>
+</div>
   )
 }
 

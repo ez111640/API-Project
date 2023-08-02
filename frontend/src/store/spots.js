@@ -1,7 +1,7 @@
 import { csrfFetch } from './csrf'
 export const LOAD_SPOTS = 'spots/loadSpots'
 export const LOAD_SPOT = 'spots/loadSpot'
-// export const ADD_SPOT = 'spots/addSpot'
+export const ADD_SPOT = 'spots/addSpot'
 // export const REMOVE_SPOT = 'spots/removeSpot'
 // export const UPDATE_SPOT = 'spots/updateSpot'
 
@@ -17,10 +17,10 @@ const loadSpot = spot => ({
     spot
 })
 
-// const addSpot = spot => ({
-//     type: ADD_SPOT,
-//     payload: spot
-// })
+const addSpot = spot => ({
+    type: ADD_SPOT,
+    spot
+})
 
 // const removeSpot = spotId => ({
 //     type: REMOVE_SPOT,
@@ -47,7 +47,6 @@ export const getOneSpot = (spotId) => async dispatch => {
     const response = await csrfFetch(`/api/spots/${spotId}`)
     if (response.ok) {
         const spot = await response.json();
-        console.log(spot.name)
         dispatch(loadSpot(spot.spot))
     } else {
         const err = await response.json();
@@ -55,20 +54,34 @@ export const getOneSpot = (spotId) => async dispatch => {
     }
 }
 
-// export const postSpot = (spot) => async dispatch => {
-//     const response = await fetch(`/api/spots`, {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application.json'
-//         },
-//         body: JSON.stringify(spot)
-//     })
-//     if (response.ok) {
-//         const newSpot = await response.json();
-//         dispatch(addSpot(newSpot))
-//         return newSpot;
-//     }
-// }
+export const postSpot = (spot) => async dispatch => {
+    console.log(spot)
+    const { name,
+        description,
+        lng, lat,
+        city, state,
+        address,
+        country,
+        price} = spot
+    const response = await csrfFetch(`/api/spots`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            address, city, state, country, lat, lng, name, description, price
+        })
+    })
+    if (response.ok) {
+        const newSpot = await response.json();
+        dispatch(addSpot(newSpot))
+        return newSpot;
+    } else {
+        console.log("HIT THE ERROR HANDLER")
+        const err = response.json();
+        return err;
+    }
+}
 
 // export const editSpot = (spot) => async dispatch => {
 //     const response = await fetch(`/api/spots/${spot.id}`, {
@@ -107,6 +120,7 @@ const initialState = {
 
 
 const spotsReducer = (state = initialState, action) => {
+    let newState;
     switch (action.type) {
         case LOAD_SPOTS:
             const spotsState = {...state, spots: {...state.spots} };
@@ -115,9 +129,14 @@ const spotsReducer = (state = initialState, action) => {
             )
             return spotsState
         case LOAD_SPOT :
-            const newState = {...state}
+            newState = {...state}
             newState.spot = action.spot
             return newState
+        case ADD_SPOT :
+             newState = {...state};
+             newState.spot[action.spot.id] = action.spot;
+             return newState;
+
         default:
             return initialState;
     }

@@ -2,9 +2,8 @@
 import { getAllSpots } from '../../store/spots.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import {Switch, Route, Link} from 'react-router-dom'
-import SpotsDetail from './SpotsDetail.js';
 import "./spots.css"
+import SpotInfo from './SpotInfo.js'
 
 function SpotsIndex () {
     const dispatch = useDispatch();
@@ -13,19 +12,22 @@ function SpotsIndex () {
     ))
     const spotsArr = Object.values(allSpots)
 
+    const sessionUser = useSelector(state => state.session.user);
+
+
 
     useEffect(()=> {
         dispatch(getAllSpots());
-    }, [dispatch])
+    }, [dispatch, sessionUser])
 
 
     return(
-        <div>
-    <ul>
+        <div className = "spot-list">
+    <ul >
         {spotsArr && spotsArr.map(spot => (
-            <div>
-            <li><Link to={`/spots/${spot.id}`}>{spot.name}</Link></li>
-            </div>
+            <li className="spotList" key={spot.id}>
+                <SpotInfo spot={spot}/>
+            </li>
         ))}
     </ul>
     </div>)

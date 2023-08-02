@@ -3,10 +3,9 @@
 }
 
 .notHidden {
-    position: relative;
-    right: 50px;
-    padding: 10px 30px 10px 15px;
-    width: 80%
+    right: 100px;
+    padding: 10px 30px 10px 10px;
+    width: 90%
 }
 
 .notHidden li {
@@ -22,16 +21,34 @@
 
     border-radius: 20px;
     column-gap: 5px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding: 8px 5px;
+    height: fit-content;
+    margin-bottom: auto;
+    margin-top: auto;
+}
+
+.user-menu i{
+    font-size: 20px;
 }
 
 .profile-button{
     width: 100px;
+    align-self: center;
 }
 
-.profile-dropdown{
 
+
+.dropdown-menu{
+    position: absolute;
+    top: 50px;
+    right: 125px;
     box-shadow: 0px 0px 5px grey;
     border-radius: 10px;
+    width: fit-content;
+    background-color: white;
+    padding: 10px;
+}
+
+.dropdown-menu button {
+    font-size: 12px;
 }
