@@ -13,15 +13,19 @@ li {
 
 a:link {
     text-decoration: none;
+
 }
 
 .leftNav a {
-    color: #ff385c
+    color: #ff385c;
+
 }
 
 .rightNav {
     display: flex;
     align-items: center;
+
+
 }
 
 .rightNav li {
@@ -40,5 +44,6 @@ a:link {
     height: 40px;
     font-size: 16px;
     border-bottom: .1px solid lightgray;
+    background-color: white;
 
 }

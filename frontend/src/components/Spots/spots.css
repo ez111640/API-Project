@@ -125,7 +125,8 @@ ul {
 }
 
 .spot-detail-host-info {
-    display: flex;
+    display: flexbox;
+    flex-direction: row;
     align-items: center;
     margin-top: 10px;
     font-size: 18px;
@@ -139,10 +140,36 @@ ul {
     padding: 10px;
     color: white;
 }
-
-.res-info{
-    background-color: white;
+.res-container {
     width: 50%;
+    margin-right: 160px;
+    margin-left: 40px;
+}
+
+.resInfo{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 30px;
+    align-items: center;
+}
+
+.res-reviews {
+    display: flex;
+    justify-content: flex-end;
+    column-gap: 10px;
+    font-size: 18px;
+}
+.res-reviews i {
+    font-size: 16px;
+}
+
+.manage-spot-list {
+    display: flex;
+    column-gap: 30px;
+}
+.delete-modal {
+    display: flex;
 }
 
 .spot-detail-sub-info {
@@ -153,4 +180,26 @@ ul {
     display: flex;
     justify-content: center;
     padding-bottom: 20px;
+}
+
+.reserve-button {
+    font-size: 18px;
+    padding: 5px 80px;
+    background-color: #ff385c;
+    color: white;
+}
+
+.create-spot-button {
+    margin-bottom: 20px;
+    float: left;
+}
+
+.manage-spots-header {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.manage-spots-header {
+    width: 100%
 }

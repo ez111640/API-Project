@@ -125,7 +125,7 @@ router.get('/current', requireAuth, async (req, res) => {
         const revSum = Review.sum('stars');
         thisSpot.avgRating = revCount / revSum
 
-        if(!thisSpot.avgRating){
+        if (!thisSpot.avgRating) {
             thisSpot.avgRating = "There are no reviews for this spot yet"
         }
         return thisSpot
@@ -203,7 +203,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
         }
     })
 
-    if (spot.ownerId !== req.user.id)  thisBooking = nonOwnerBookings;
+    if (spot.ownerId !== req.user.id) thisBooking = nonOwnerBookings;
     else thisBooking = ownerBookings
 
     return res.json({ Bookings: thisBooking })
@@ -299,7 +299,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
 
     const spot = await Spot.findByPk(id)
 
-    if(!startDate || !endDate){
+    if (!startDate || !endDate) {
         res.status(400);
         return res.json({
             message: "Start and end date are required"
@@ -387,17 +387,15 @@ router.delete('/:spotId', requireAuth, async (req, res) => {
 
 
     const thisSpot = await Spot.findByPk(req.params.spotId)
-    console.log(thisSpot.ownerId)
-    console.log(req.user.id)
 
     if (!thisSpot) {
         res.status(404)
-        res.json({ message: "Spot couldn't be found" })
+        return res.json({ message: "Spot couldn't be found" })
     }
 
     if (thisSpot.ownerId !== req.user.id) {
         res.status(403)
-        return res.json({ message: "Forbidden" });
+        return res.json({ message: "Ultra Forbidden" });
     }
 
 
@@ -483,9 +481,8 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
     }
 
 
-    const { ownerId, address, city, state, country, name, description, price, lat, lng } = req.body
+    const { address, city, state, country, name, description, price, lat, lng } = req.body
     if (address) spot.address = address
-    if (ownerId) spot.ownerId = ownerId
     if (city) spot.city = city
     if (state) spot.state = state
     if (country) spot.country = country
@@ -494,6 +491,7 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
     if (price) spot.price = price
     if (lat) spot.lat = lat
     if (lng) spot.lng = lng
+    spot.ownerId = req.user.id
 
     await spot.save();
 

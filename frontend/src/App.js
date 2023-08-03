@@ -6,7 +6,8 @@ import Navigation from './components/Navigation'
 import SpotsIndex from './components/Spots/index'
 import SpotsDetail from './components/Spots/SpotsDetail'
 import SpotForm from './components/Spots/SpotForm'
-import ReviewIndex from './components/Reviews/ReviewIndex'
+import SpotsCurrent from './components/Spots/SpotsCurrent'
+import ManageReviews from './components/Reviews/ManageReviews'
 import "./index.css"
 
 function App() {
@@ -28,14 +29,17 @@ function App() {
         <Route path ='/spots/new'>
           <SpotForm />
         </Route>
-        <Route path ='/spots/edit'>
+        <Route path ='/spots/:spotId/edit'>
           <SpotForm />
         </Route>
-        <Route path ='/spots/:spotId/reviews'>
-          <ReviewIndex />
-          </Route>
+        <Route path ='/spots/current'>
+          <SpotsCurrent />
+        </Route>
         <Route path = '/spots/:spotId'>
             <SpotsDetail />
+        </Route>
+        <Route path= '/reviews/current'>
+            <ManageReviews />
         </Route>
     </Switch>
 )}

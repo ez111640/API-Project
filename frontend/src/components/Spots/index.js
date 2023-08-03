@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import "./spots.css"
 import SpotInfo from './SpotInfo.js'
+import { getAllReviews } from '../../store/reviews.js';
 
 function SpotsIndex () {
     const dispatch = useDispatch();
@@ -17,7 +18,7 @@ function SpotsIndex () {
 
 
     useEffect(()=> {
-        dispatch(getAllSpots());
+        dispatch(getAllSpots(), getAllReviews());
     }, [dispatch, sessionUser])
 
 
@@ -26,7 +27,7 @@ function SpotsIndex () {
     <ul >
         {spotsArr && spotsArr.map(spot => (
             <li className="spotList" key={spot.id}>
-                <SpotInfo spot={spot}/>
+                <SpotInfo spot={spot} currentUser={false}/>
             </li>
         ))}
     </ul>
