@@ -37,7 +37,7 @@ function SpotsCurrent() {
             </div>
             <div className='manage-spot-list'>
                 {currentSpots.length >= 0 ? currentSpots.map((spot) =>
-                (<div>
+                (<div key={spot.id}>
                     <SpotInfo spot={spot} currentUser={true} />
                 </div>)
                 )

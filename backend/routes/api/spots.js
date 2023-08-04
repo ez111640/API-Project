@@ -154,12 +154,6 @@ router.get('/:spotId/reviews', async (req, res) => {
 
 
     })
-    if (!allReviews.length) {
-        res.status(404)
-        res.json({
-            message: "Spot couldn't be found"
-        })
-    }
 
     const revArr = allReviews.map(review => {
         const thisReview = review.toJSON();

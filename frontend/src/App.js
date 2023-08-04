@@ -32,13 +32,13 @@ function App() {
         <Route path ='/spots/:spotId/edit'>
           <SpotForm />
         </Route>
-        <Route path ='/spots/current'>
+        <Route exact path ='/spots/current'>
           <SpotsCurrent />
         </Route>
         <Route path = '/spots/:spotId'>
             <SpotsDetail />
         </Route>
-        <Route path= '/reviews/current'>
+        <Route exact path= '/reviews/current'>
             <ManageReviews />
         </Route>
     </Switch>

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux"
 import { getCurrentReviews } from "../../store/reviews"
 import DeleteReviewModal from "../DeleteReviewModal"
 import OpenModalButton from "../Navigation/OpenModalMenuItem"
-import {Link} from 'react-router-dom'
 import PostReviewModal from "../PostReviewModal/PostReviewModal"
 import "./reviews.css"
 
@@ -26,7 +25,9 @@ function ManageReviews() {
         <div className="manage-reviews-container">
             <h1> Manage reviews</h1>
             <div className = "manage-review-each">
+
             {currentReviews.length ? currentReviews.map(review => (
+
                 <div className = "review-container" key={review.id}>
                     <h3>{review.Spot.name}</h3>
                     <h4>{review.createdAt}</h4>

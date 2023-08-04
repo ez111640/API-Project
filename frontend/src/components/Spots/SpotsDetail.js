@@ -13,30 +13,37 @@ function SpotsDetail() {
     const { spotId } = useParams();
     const allSpots = useSelector((state) => state.spotsState)
     const userId = useSelector((state) => state.session.user.id)
-    const allReviews = useSelector((state) => state.reviewsState.reviews)
+
+    const allReviews = useSelector(state => state.reviewsState.reviews)
+    let reviewsArr = Object.values(allReviews)
+    //const allReviews = useSelector((state) => state.reviewsState.reviews)
     const spot = allSpots.spot
     let isHost = false;
     let hasPosted = false;
     let canPost = false;
     useEffect(() => {
-        dispatch(getOneSpot(spotId));
-    }, [dispatch, spotId, spot.numReviews])
-
-
-    let reviews = Object.values(allReviews)
-
-    let spotReviews = reviews.filter((review)=>
-        review?.spotId == spotId
-    )
-
-
-    for(let i =0;i<spotReviews.length;i++){
-        if(spotReviews[i].userId ===  userId){
-            hasPosted = true;
+        async function fn() {
+            await dispatch(getOneSpot(spotId))
+            await dispatch(getAllReviews(spotId))
         }
-    }
+        fn();
+    }, [dispatch, spotId])
 
-    console.log(spotReviews)
+    console.log("SPOT: ", spot)
+    // let reviews = Object.values(allReviews)
+
+    // let spotReviews = reviews.filter((review)=>
+    //     review?.spotId == spotId
+    // )
+
+
+    // for(let i =0;i<spotReviews.length;i++){
+    //     if(spotReviews[i].userId ===  userId){
+    //         hasPosted = true;
+    //     }
+    // }
+
+    // console.log(spotReviews)
 
 
     if (!spot) return null
@@ -56,10 +63,10 @@ function SpotsDetail() {
 
     let hostName;
     if (spot.User) hostName = `${spot.User.firstName} ${spot.User.lastName}`
-        if (spot.User && spot.User.id === userId) isHost = true;
+    if (spot.ownerId === userId) isHost = true;
 
 
-    if(!isHost && !hasPosted){
+    if (!isHost && !hasPosted) {
         canPost = true
     }
 
@@ -98,7 +105,7 @@ function SpotsDetail() {
 
                         </div>
                     </div>
-                     <button className="reserve-button"><OpenModalButton
+                    <button className="reserve-button"><OpenModalButton
                         itemText="Reserve"
                         modalComponent={<UpcomingFeatureModal />} /></button>
                 </div>
@@ -108,9 +115,10 @@ function SpotsDetail() {
             <hr />
             <p><i className="fa-solid fa-star">{rating ? rating : "New"}</i></p>
             <p>Number of reviews: {spot.numReviews}</p>
-            {canPost && <button><OpenModalButton itemText="Post Your Review" modalComponent={<PostReviewModal spot = {spot} reviewType={reviewType}/>}/></button>}
-   
-            <ReviewIndex spotId={spotId} />
+            {canPost && <button><OpenModalButton itemText="Post Your Review" modalComponent=
+                {<PostReviewModal spot={spot} reviewType={reviewType} />} /></button>}
+
+            <ReviewIndex reviewsArr={reviewsArr} />
         </div>
     )
 }

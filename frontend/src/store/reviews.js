@@ -33,6 +33,7 @@ export const getCurrentReviews = () => async dispatch => {
     const response = await csrfFetch('/api/reviews/current')
     if (response.ok) {
         const reviews = await response.json();
+
         dispatch(loadReviews(reviews.Reviews))
         return reviews
     } else {
@@ -48,7 +49,8 @@ export const getAllReviews = (spotId) => async dispatch => {
 
     if (response.ok) {
         const reviews = await response.json();
-        await dispatch(loadReviews(reviews.Reviews));
+        console.log("REVIEW IN THUNK", reviews.Reviews)
+        dispatch(loadReviews(reviews.Reviews));
         return reviews;
     }
     else {
@@ -65,7 +67,6 @@ export const deleteReview = (reviewId) => async dispatch => {
 }
 
 export const postReview = (spot, reviewInfo) => async dispatch => {
-    console.log(spot.id)
     const { review, stars } = reviewInfo
     const response = await csrfFetch(`/api/spots/${spot.id}/reviews`,
         {
@@ -110,9 +111,10 @@ const initialState = {
     reviews: {}
 }
 const reviewsReducer = (state = initialState, action) => {
+    console.log("REVIEW REDUCER INVOKED")
     switch (action.type) {
         case LOAD_REVIEWS:
-            const reviewsState = { ...state, reviews: { ...state.reviews } };
+            const reviewsState = { ...state, reviews: {} };
             action.reviews.forEach(
                 (review) => reviewsState.reviews[review.id] = review
             )
@@ -126,9 +128,9 @@ const reviewsReducer = (state = initialState, action) => {
             newReviewState.reviews[action.review.id] = action.review;
             return newReviewState
         case EDIT_REVIEW:
-                const updateReviewState = {...state, review: {...state.reviews}}
-                updateReviewState.reviews[action.review.id] = action.review;
-                return updateReviewState;
+            const updateReviewState = { ...state, review: { ...state.reviews } }
+            updateReviewState.reviews[action.review.id] = action.review;
+            return updateReviewState;
         default:
             return initialState;
     }
