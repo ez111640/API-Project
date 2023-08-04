@@ -1,16 +1,10 @@
-.spot-list {
-    width: fit-content
-}
-
 
 ul {
-    margin: 30px;
-
-    padding: 0px;
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
-    column-gap: 25px;
+    column-gap: 20px;
+    row-gap: 10px;
+    padding-left: 80px;
 }
 
 .spotDetailHeader {
@@ -19,8 +13,8 @@ ul {
 }
 
 .prevImage {
-    width: 295px;
-    height: 250px;
+    width: 190px;
+    height: 190px;
     object-fit: cover;
     border-radius: 10px;
 }
@@ -77,30 +71,28 @@ ul {
 
 
 .spot-detail-wrapper {
-    width: 95%;
-    margin-left: auto;
-    margin-right: auto;
+    width: fit-content;
 
 }
 
 .spot-detail-photo-wrapper {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     border-radius: 10px;
-    padding: none;
     overflow: hidden;
-    column-gap: 8px;
-    width: 90%;
+    column-gap: 10px;
 }
 
 .detail-prev-photo {
-    width: 430px;
-    height: 408px;
+    width: 480px;
+    height: 448px;
     object-fit: cover;
 }
 
 
 .additional-photos {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     flex-direction: row;
     flex-wrap: wrap;
     column-gap: 8px;
@@ -108,8 +100,8 @@ ul {
 }
 
 .additional-photos img {
-    width: 207px;
-    height: 200px;
+    width: 240px;
+    height: 220px;
     object-fit: cover;
 
 }
@@ -130,7 +122,6 @@ ul {
     align-items: center;
     margin-top: 10px;
     font-size: 18px;
-    width: 50%;
 }
 
 .spot-detail-host-info button {
@@ -141,17 +132,23 @@ ul {
     color: white;
 }
 .res-container {
-    width: 50%;
     margin-right: 160px;
-    margin-left: 40px;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 10px;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .resInfo{
     width: 100%;
     display: flex;
-    justify-content: space-between;
-    padding: 0px 30px;
+    justify-content: space-evenly;
+    column-gap: 10px;
     align-items: center;
+    justify-self: center;
+
 }
 
 .res-reviews {
@@ -166,14 +163,19 @@ ul {
 
 .manage-spot-list {
     display: flex;
+    flex-wrap: wrap;
     column-gap: 30px;
+    row-gap: 30px;
 }
 .delete-modal {
     display: flex;
 }
 
 .spot-detail-sub-info {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+
 }
 
 .spot-form-header {
@@ -187,19 +189,24 @@ ul {
     padding: 5px 80px;
     background-color: #ff385c;
     color: white;
+    margin-top: 0px;
 }
 
 .create-spot-button {
     margin-bottom: 20px;
-    float: left;
+    width: 200px;
+
 }
 
 .manage-spots-header {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-rows: 2;
     width: 100%;
+    justify-content: start;
 }
 
-.manage-spots-header {
-    width: 100%
+
+
+a {
+    color: black;
 }

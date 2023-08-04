@@ -5,7 +5,7 @@ export const ADD_SPOT = 'spots/addSpot'
 export const USER_SPOTS = 'spots/userSpots'
 export const REMOVE_SPOT = 'spots/removeSpot'
 export const UPDATE_SPOT = 'spots/updateSpot'
-export const LOAD_REVIEWS = '/spots/loadReviews'
+// export const LOAD_REVIEWS = '/spots/loadReviews'
 
 export const loadSpots = spots => {
     return {
@@ -24,9 +24,9 @@ const addSpot = spot => ({
     spot
 })
 
-const updateSpot = spotId => ({
+const updateSpot = spot => ({
     type: UPDATE_SPOT,
-    spotId
+    spot
 })
 
 
@@ -35,10 +35,10 @@ export const removeSpot = spotId => ({
     spotId
 })
 
-export const loadReviews = reviews => ({
-    type: LOAD_REVIEWS,
-    reviews
-})
+// export const loadReviews = reviews => ({
+//     type: LOAD_REVIEWS,
+//     reviews
+// })
 
 export const getAllSpots = () => async dispatch => {
 
@@ -75,18 +75,23 @@ export const getOneSpot = (spotId) => async dispatch => {
     }
 }
 
-export const getAllReviews = (spotId) => async dispatch => {
-    const response = await csrfFetch(`/api/spots/${spotId}/reviews`)
-    if (response.ok) {
-        const data = await response.json();
-        dispatch(loadReviews(data.Reviews));
-        return data.Reviews;
-    }
-    else {
-        const err = await response.json();
-        return err;
-    }
-}
+// export const getAllReviews = (spotId) => async dispatch => {
+//     const response = await csrfFetch(`/api/spots/${spotId}/reviews`)
+//     if (response.ok) {
+//         const data = await response.json();
+//         dispatch(loadReviews(data.Reviews));
+//         return data.Reviews;
+//     }
+//     else {
+//         const err = await response.json();
+//         if(err.status === 404){
+//             return {
+//                 "message": "No reviews yet"
+//             }
+//         }
+//         return err;
+//     }
+// }
 
 export const postSpot = (spot, spotImages, user) => async dispatch => {
 
@@ -97,19 +102,19 @@ export const postSpot = (spot, spotImages, user) => async dispatch => {
         },
         body: JSON.stringify(spot)
     })
-    // if (response.ok) {
+    if (response.ok) {
     const newSpot = await response.json();
 
-    await dispatch(postImage(newSpot.newSpot, spotImages, user));
-    //     return spot;
-    // } else {
-    //     const err = await response.json();
-    //     return err;
-    // }
+    await dispatch(postImageNewSpot(newSpot.newSpot, spotImages, user));
+        return spot;
+    } else {
+        const err = await response.json();
+        return err;
+    }
 
 }
 
-export const postImage = (spot, spotImages, user) => async dispatch => {
+export const postImageNewSpot = (spot, spotImages, user) => async dispatch => {
     spot.previewImage = [];
     for (let i = 0; i < spotImages.length; i++) {
         const response = await csrfFetch(`/api/spots/${spot.id}/images`, {
@@ -130,7 +135,8 @@ export const postImage = (spot, spotImages, user) => async dispatch => {
     return spot
 }
 
-export const editSpot = (spot) => async dispatch => {
+export const editSpot = (spot, spotImages, user) => async dispatch => {
+    const spotId = spot.id
     const response = await csrfFetch(`/api/spots/${spot.id}`, {
         method: 'PUT',
         headers: {
@@ -139,15 +145,35 @@ export const editSpot = (spot) => async dispatch => {
         body: JSON.stringify(
             spot)
     })
-    if (response.ok) {
-        const spot = await response.json();
-        if (spot) {
-            dispatch(updateSpot(spot.newSpot))
+    // if (response.ok) {
+        const newSpot = await response.json();
+        if (newSpot) {
+            await dispatch(updateSpot(spot.newSpot, spotImages, user))
             return spot;
         }
-    } else {
-        const err = response.json();
-        return err;
+    // } else {
+    //     const err = response.json();
+    //     return err;
+    // }
+}
+export const postImageUpdateSpot = (spot, spotImages, user) => async dispatch => {
+    spot.previewImage = [];
+    for(let i = 0;i< spotImages.length;i++) {
+        const response = await csrfFetch(`/api/spots/${spot.id}/images`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(spotImages[i])
+        })
+
+        if(response.ok) {
+            const image = await response.json();
+            spot.previewImage.push(image)
+        }
+        spot.Owner = user;
+        dispatch(updateSpot(spot))
+        return spot
     }
 }
 
@@ -182,7 +208,7 @@ const spotsReducer = (state = initialState, action) => {
             newState.spot = action.spot
             return newState
         case ADD_SPOT:
-            newState = { ...state, spots: { ...state.spots }, currentUserSpots: { ...state.currentUserSpots }, reviews: { ...state.reviews } };
+            newState = { ...state, spots: { ...state.spots }, currentUserSpots: { ...state.currentUserSpots }};
             newState.spots[action.spot.id] = action.spot;
             return newState;
         case REMOVE_SPOT:
@@ -190,17 +216,11 @@ const spotsReducer = (state = initialState, action) => {
 
             delete newState.currentUserSpots[action.spotId]
             delete newState.spots[action.spotId]
-            return newState
-        case LOAD_REVIEWS: {
-            newState = { ...state, spots: { ...state.spots }, spot: { ...state.spot }, currentUserSpots: { ...state.currentUserSpots }, reviews: { ...state.reviews } }
-            action.reviews.forEach(
-                (review) => newState.reviews[review.id] = review
-            )
             return newState;
-        }
+
         case UPDATE_SPOT: {
-            newState = { ...state, spots: { ...state.spots }, spot: { ...state.spot }, currentUserSpots: { ...state.currentUserSpots }, reviews: { ...state.reviews } }
-            newState.spot[action.spotId.id] = action.spotId
+            newState = { ...state, spots: { ...state.spots }, spot: { ...state.spot }, currentUserSpots: { ...state.currentUserSpots }}
+            newState.spots[action.spotId] = action.spotId
             return newState;
         }
         default:

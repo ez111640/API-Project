@@ -8,7 +8,9 @@ li {
     color: #ff385c;
 
 }
-
+.leftNav.pointer{
+    cursor: pointer;
+}
 
 
 a:link {

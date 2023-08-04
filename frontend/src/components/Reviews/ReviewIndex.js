@@ -1,43 +1,37 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { getAllReviews } from "../../store/spots";
-
-function ReviewIndex({spot}) {
-const dispatch = useDispatch()
-
-const allReviews = useSelector(state =>state.spotsState.reviews)
-
-const reviewsArr = Object.values(allReviews)
+import { getAllReviews } from "../../store/reviews";
 
 
-const userReviews = reviewsArr.filter(review => review.spotId === spot.id)
+function ReviewIndex({ spotId }) {
+    const dispatch = useDispatch()
+    const allReviews = useSelector(state => state.reviewsState.reviews)
+    const sessionUser = useSelector(state => state.session.user)
 
-console.log(userReviews)
+    let reviewsArr
+    if(allReviews) reviewsArr = Object.values(allReviews)
 
 
-useEffect(()=> {
-    dispatch(getAllReviews(spot.id));
-}, [dispatch, spot.id])
+    const id = spotId;
 
-return (
-    <div>
-    <div>Reviews</div>
-    <ul>
-    {userReviews.length && userReviews.map(review => (
+    const spotReviews = reviewsArr.filter((review) => review?.spotId === id)
 
-        <div key={review.id}>
+    useEffect(()=> {
+        dispatch(getAllReviews(spotId))
+    },[dispatch])
 
-        <h1>{review.User.firstName} {review.User.lastName}</h1>
-        <h1>{review.createdAt}</h1>
-        <h1>{review.review}</h1>
-
+    return (
+        <div>
+            <div>Reviews</div>
+            <ul>
+                {spotReviews.length ? spotReviews.map((review) => (
+                    <div>
+                        {review.review}
+                    </div>
+                )): <div>"No reviews found"</div>}
+            </ul>
         </div>
-    ))}
-    </ul>
-    </div>
-)
+    )
 }
 
-
-export default ReviewIndex;
+export default ReviewIndex

@@ -2,18 +2,14 @@ import { useDispatch } from "react-redux"
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min"
 import { useModal } from "../../context/modal";
 import {deleteReview} from '../../store/reviews'
-import { useEffect } from "react";
-
 const DeleteReviewModal = ({reviewId}) => {
     const dispatch = useDispatch();
-    const history = useHistory();
     const {closeModal} = useModal();
 
     const onSubmit = (e) => {
         e.preventDefault();
         dispatch(deleteReview(reviewId))
         .then(closeModal)
-        history.push("/reviews/current")
     }
 
 

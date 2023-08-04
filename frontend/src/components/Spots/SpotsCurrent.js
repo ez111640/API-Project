@@ -30,9 +30,11 @@ function SpotsCurrent() {
     return (
 
         <div>
+            <div className = "manage-spots-header">
                 <h1>Manage Spots</h1>
-                <button className="create-spot-button" type="submit"><Link to="/spots/new">Create New Spot</Link></button>
 
+                <button className="create-spot-button" type="submit"><Link to="/spots/new">Create New Spot</Link></button>
+            </div>
             <div className='manage-spot-list'>
                 {currentSpots.length >= 0 ? currentSpots.map((spot) =>
                 (<div>

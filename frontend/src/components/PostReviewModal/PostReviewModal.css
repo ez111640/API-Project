@@ -1,0 +1,14 @@
+.ratingsArea {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+
+}
+
+.review-modal {
+    padding: 20px;
+}
+
+.ratingsArea i {
+    font-size: 30px;
+}

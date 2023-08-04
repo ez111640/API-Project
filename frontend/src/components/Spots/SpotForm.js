@@ -1,11 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { postImage, postSpot } from "../../store/spots";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useHistory, useParams } from 'react-router-dom'
 import { editSpot } from "../../store/spots";
 import "./form.css"
+import { getOneSpot } from "../../store/spots";
 
 function SpotForm() {
+    const spot = useSelector(state => state.spot)
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [lng, setLng] = useState('');
@@ -23,11 +25,14 @@ function SpotForm() {
     const sessionUser = useSelector(state => state.session.user)
     const history = useHistory();
 
+   
+
     const dispatch = useDispatch();
     const { spotId } = useParams();
 
     const url = window.location.href
     const splitUrl = url.split("/")
+
     let isCreate = true;
     if (splitUrl[splitUrl.length - 1] === "new") {
         isCreate = true;
@@ -35,6 +40,10 @@ function SpotForm() {
     if (splitUrl[splitUrl.length - 1] === "edit") {
         isCreate = false;
     }
+    useEffect(()=> {
+        dispatch(getOneSpot(spotId))
+    })
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -76,18 +85,17 @@ function SpotForm() {
             city, state,
             address,
             country,
-            price,
-            id: spotId
+            price
         }
 
         if (isCreate) {
 
-            dispatch(postSpot(spot, spotImages))
+            dispatch(postSpot(spot, spotImages, sessionUser))
         }
 
 
         else {
-            dispatch(editSpot(updatedSpot))
+            dispatch(editSpot( updatedSpot, spotImages, sessionUser))
         }
 
     }
@@ -108,6 +116,7 @@ function SpotForm() {
                                 Country
                             </label>
                             <input type="text" value={country}
+                                placeholder ={name && name}
                                 onChange={e => setCountry(e.target.value)}></input>
                             <label>
                                 Address

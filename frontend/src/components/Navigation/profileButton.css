@@ -25,6 +25,7 @@
     height: fit-content;
     margin-bottom: auto;
     margin-top: auto;
+    cursor: pointer
 }
 
 .user-menu i{

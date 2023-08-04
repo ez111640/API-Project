@@ -6,9 +6,9 @@ import "./spots.css"
 import SpotInfo from './SpotInfo.js'
 import { getAllReviews } from '../../store/reviews.js';
 
-function SpotsIndex () {
+function SpotsIndex() {
     const dispatch = useDispatch();
-    const allSpots = useSelector((state)=>(
+    const allSpots = useSelector((state) => (
         state.spotsState.spots
     ))
     const spotsArr = Object.values(allSpots)
@@ -17,21 +17,21 @@ function SpotsIndex () {
 
 
 
-    useEffect(()=> {
-        dispatch(getAllSpots(), getAllReviews());
+    useEffect(() => {
+        dispatch(getAllSpots());
     }, [dispatch, sessionUser])
 
 
-    return(
-        <div className = "spot-list">
-    <ul >
-        {spotsArr && spotsArr.map(spot => (
-            <li className="spotList" key={spot.id}>
-                <SpotInfo spot={spot} currentUser={false}/>
-            </li>
-        ))}
-    </ul>
-    </div>)
+    return (
+        <div className="spot-list">
+            <ul >
+                {spotsArr && spotsArr.map(spot => (
+                    <li className="spotList" key={spot.id}>
+                        <SpotInfo spot={spot} currentUser={false} />
+                    </li>
+                ))}
+            </ul>
+        </div>)
 }
 
 
