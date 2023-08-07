@@ -12,14 +12,19 @@ const DeleteReviewModal = ({reviewId}) => {
         .then(closeModal)
     }
 
+    const onNoSubmit = (e) => {
+        e.preventDefault();
+        closeModal();
+    }
+
 
     return (
 
-        <div>
+        <div className = 'confirm-delete'>
             <h1>Confirm Delete</h1>
             <p>Are you sure you want to remove this review ?</p>
-            <button onClick={onSubmit} type="submit">Yes (Delete Review)</button>
-            <button>No (Keep Review)</button>
+            <button onClick={onSubmit} className = 'yes-delete-button' type="submit">Yes (Delete Review)</button>
+            <button onClick={onNoSubmit} className = 'no-delete-button'>No (Keep Review)</button>
         </div>
     )
 }

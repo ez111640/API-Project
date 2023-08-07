@@ -10,17 +10,16 @@ function SpotInfo({ spot, currentUser }) {
     else imageSrc="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
 
 
-    const priceArr = ["$1450","$720","$990","$2100","$1120"]
     return (
         <div className="spot-div"><Link to={`/spots/${spot.id}`}>
             <img src={imageSrc} alt="preview" title={spot.name} className="prevImage"></img>
 
             <div className = "location-rating">
                 <p className="spot-location">{spot.city},{spot.state}</p>
-                <p className="spot-rating"><i className="fa-solid fa-star">{parseInt(spot.avgRating) ? parseInt(spot.avgRating).toFixed(2) : "New Spot"}</i></p>
+                <div className="spot-rating"><i className="fa-solid fa-star"></i><div>&#183;</div>{parseInt(spot.avgRating) ? parseInt(spot.avgRating).toFixed(2) : "New"}</div>
             </div>
             <div className="subtitle">
-                <p className = "spot-price"><span className="price-span">{priceArr[spot.id]}</span> night</p>
+                <p className = "spot-price"><span className="price-span">{`$${spot.price}`}</span> night</p>
             </div>
             </Link>
            { currentUser &&

@@ -24,35 +24,52 @@ function LoginFormModal() {
       });
   };
 
+  const handleDemoUser = () => {
+    setCredential("Demo-lition")
+    setPassword ("password")
+    return dispatch(sessionActions.login({credential, password}))
+    .then(closeModal)
+    .catch(async res => {
+    const data = await res.json();
+      if(data && data.errors) {
+        setErrors(data.errors)
+      }
+    })
+    }
+
+
   return (
-    <>
-      <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
+    <div className="login-modal">
+      <div className = "login-header">
+      <h2>Log In</h2>
+      </div>
+      <form className = "login-form" onSubmit={handleSubmit}>
         <label>
           Username or Email
+        </label>
           <input
             type="text"
             value={credential}
             onChange={(e) => setCredential(e.target.value)}
             required
           />
-        </label>
         <label>
           Password
+        </label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </label>
         {errors.credential && (
-          <p>{errors.credential}</p>
+          <p className = "errors">{errors.credential}</p>
         )}
-        {errors.message && <p>{errors.message}</p>}
-        <button type="submit">Log In</button>
+        {errors.message && <p className = "errors">{errors.message}</p>}
+         <button className = "modal-submit" type="submit" disabled={password.length <6 ||credential.length <4}>Log In</button>
+        <button className = 'demo-user' onClick={() => handleDemoUser()}>Log in as Demo User</button>
       </form>
-    </>
+    </div>
   );
 }
 

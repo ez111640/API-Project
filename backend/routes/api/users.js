@@ -57,7 +57,7 @@ router.post('/', validateSignup, async (req, res, next) => {
         const err = new Error('User with that email already exists')
         err.status = 500
         err.errors = {
-            message: 'User already exists'
+            email: 'User already exists'
         }
         err.stack = null;
         return next(err)
@@ -73,7 +73,7 @@ router.post('/', validateSignup, async (req, res, next) => {
         const err = new Error('User with that username already exists')
         err.status = 500
         err.errors = {
-            message: 'User already exists'
+            username: 'User already exists'
         }
         return next(err)
     }

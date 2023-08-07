@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom"
 import { getOneSpot } from "../../store/spots";
@@ -12,65 +12,62 @@ function SpotsDetail() {
     const dispatch = useDispatch();
     const { spotId } = useParams();
     const allSpots = useSelector((state) => state.spotsState)
-    const userId = useSelector((state) => state.session.user.id)
-
+    const user = useSelector((state) => state.session.user)
     const allReviews = useSelector(state => state.reviewsState.reviews)
+
+
     let reviewsArr = Object.values(allReviews)
-    //const allReviews = useSelector((state) => state.reviewsState.reviews)
     const spot = allSpots.spot
-    let isHost = false;
-    let hasPosted = false;
-    let canPost = false;
     useEffect(() => {
-        async function fn() {
-            await dispatch(getOneSpot(spotId))
-            await dispatch(getAllReviews(spotId))
-        }
-        fn();
-    }, [dispatch, spotId])
+        dispatch(getOneSpot(spotId))
+        dispatch(getAllReviews(spotId))
+    }, [dispatch, spotId, spot.numReviews])
 
-    console.log("SPOT: ", spot)
-    // let reviews = Object.values(allReviews)
-
-    // let spotReviews = reviews.filter((review)=>
-    //     review?.spotId == spotId
-    // )
-
-
-    // for(let i =0;i<spotReviews.length;i++){
-    //     if(spotReviews[i].userId ===  userId){
-    //         hasPosted = true;
-    //     }
-    // }
-
-    // console.log(spotReviews)
-
-
+    let currentReviews = [];
     if (!spot) return null
+
+    if (reviewsArr.length) {
+        currentReviews = reviewsArr.filter((review) => user && review.userId === user.id)
+
+    }
+
+
+
 
     let img;
     if (spot.previewImage && spot.previewImage.length && spot.previewImage[0]) img = spot.previewImage[0].url
-    else img = null;
+    else img = "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
 
     let imgArr = [];
     if (spot.previewImage && spot.previewImage.length) imgArr = spot.previewImage.slice(1);
 
-
-    let rating;
-    if (spot.avgStarRating && parseInt(spot.avgStarRating)) rating = parseInt(spot.avgStarRating).toFixed(2)
-
-
-
     let hostName;
     if (spot.User) hostName = `${spot.User.firstName} ${spot.User.lastName}`
-    if (spot.ownerId === userId) isHost = true;
+
+    let isHost = false;
+    if(user && spot.ownerId === user.id) isHost = true;
 
 
-    if (!isHost && !hasPosted) {
-        canPost = true
+    let sumRatings = 0;
+    if (reviewsArr.length) {
+        for (let i = 0; i < reviewsArr.length; i++) {
+            sumRatings += parseInt(reviewsArr[i].stars)
+        }
     }
+    let ratings = sumRatings / (reviewsArr.length)
 
-    const reviewType = "New"
+    function fillImages(arr) {
+        let images = []
+        for (let i = 0; i < 4; i++) {
+
+            if (arr[i]) {
+                images.push(<img key={arr[i].id} src={arr[i].url} alt="home exterior"></img>)
+            } else {
+                images.push(<img key = {i} src="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg" alt="Unavailable"></img>)
+            }
+        }
+        return images;
+    }
     return (
         <div className="spot-detail-wrapper">
             <div>
@@ -83,9 +80,10 @@ function SpotsDetail() {
             <div className="spot-detail-photo-wrapper">
                 <div><img src={img} className="detail-prev-photo" alt="preview"></img></div>
                 <div className="additional-photos">
-                    {imgArr?.length >= 4 && imgArr.map((image) =>
-                        <img key={image.Id} src={image.url} alt="home exterior"></img>
-                    )}
+                    {
+                        fillImages(imgArr)
+                    }
+
                 </div>
             </div>
             <div className="spot-detail-sub-info">
@@ -100,25 +98,29 @@ function SpotsDetail() {
                         </div>
                         <div className="res-reviews">
 
-                            <p><i className="fa-solid fa-star">{spot.avgStarRating}</i></p>
-                            <p>{spot.numReviews} reviews</p>
+                            <p className = 'star-area'><i className="fa-solid fa-star"></i>{reviewsArr.length ? ratings.toFixed(2) : "New"}</p>
+                            <p  >{reviewsArr.length} {reviewsArr.length === 1 ? "review" : "reviews"}</p>
 
                         </div>
                     </div>
-                    <button className="reserve-button"><OpenModalButton
+                    {/* <button className="reserve-button"><OpenModalButton
                         itemText="Reserve"
-                        modalComponent={<UpcomingFeatureModal />} /></button>
+                        modalComponent={<UpcomingFeatureModal />} /></button> */}
+                  <button onClick={()=>alert('Feature coming soon')} className="reserve-button">Reserve</button>
+
                 </div>
 
             </div>
 
             <hr />
-            <p><i className="fa-solid fa-star">{rating ? rating : "New"}</i></p>
-            <p>Number of reviews: {spot.numReviews}</p>
-            {canPost && <button><OpenModalButton itemText="Post Your Review" modalComponent=
-                {<PostReviewModal spot={spot} reviewType={reviewType} />} /></button>}
+            <div className="resInfo">
+                <p className = "star-area"><i className="fa-solid fa-star"></i><div>&#183;</div>{reviewsArr.length ? ratings.toFixed(2) : "New"}</p>
+                {reviewsArr.length > 0 && <p className="show-num-reviews">{reviewsArr.length} {reviewsArr.length  === 1 ? " Review" : " Reviews"}</p>}
+            </div>
+            {(user && !currentReviews.length && !isHost) && <button className="post-review-button"><OpenModalButton itemText="Post Your Review" modalComponent=
+                {<PostReviewModal spot={spot} user={user} />} /></button>}
 
-            <ReviewIndex reviewsArr={reviewsArr} />
+            {reviewsArr.length ? <ReviewIndex reviewsArr={reviewsArr} /> : user && <div>Be the first to post a review!</div>}
         </div>
     )
 }

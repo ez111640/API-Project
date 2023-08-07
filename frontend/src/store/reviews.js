@@ -31,6 +31,7 @@ const editReview = review => ({
 
 export const getCurrentReviews = () => async dispatch => {
     const response = await csrfFetch('/api/reviews/current')
+    console.log("RESPONSE" , response)
     if (response.ok) {
         const reviews = await response.json();
 
@@ -49,7 +50,6 @@ export const getAllReviews = (spotId) => async dispatch => {
 
     if (response.ok) {
         const reviews = await response.json();
-        console.log("REVIEW IN THUNK", reviews.Reviews)
         dispatch(loadReviews(reviews.Reviews));
         return reviews;
     }
@@ -66,7 +66,8 @@ export const deleteReview = (reviewId) => async dispatch => {
     dispatch(removeReview(reviewId))
 }
 
-export const postReview = (spot, reviewInfo) => async dispatch => {
+export const postReview = (spot, reviewInfo, user) => async dispatch => {
+    console.log("USER IN THUNK" , user)
     const { review, stars } = reviewInfo
     const response = await csrfFetch(`/api/spots/${spot.id}/reviews`,
         {
@@ -80,7 +81,9 @@ export const postReview = (spot, reviewInfo) => async dispatch => {
 
     if (response.ok) {
         const newReview = await response.json();
-        await dispatch(addReview(newReview))
+        newReview.User = user;
+         dispatch(addReview(newReview))
+
         return newReview;
 
     } else {
@@ -90,7 +93,7 @@ export const postReview = (spot, reviewInfo) => async dispatch => {
 }
 
 export const updateReview = (id, review) => async dispatch => {
-    const response = await csrfFetch(`/api/reviews/${id}`, {
+    const response = await csrfFetch(`/reviews${review.id}}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -108,10 +111,9 @@ export const updateReview = (id, review) => async dispatch => {
 }
 
 const initialState = {
-    reviews: {}
+    reviews: {}, review: {}
 }
 const reviewsReducer = (state = initialState, action) => {
-    console.log("REVIEW REDUCER INVOKED")
     switch (action.type) {
         case LOAD_REVIEWS:
             const reviewsState = { ...state, reviews: {} };
@@ -122,17 +124,19 @@ const reviewsReducer = (state = initialState, action) => {
         case REMOVE_REVIEW:
             const newState = { ...state, reviews: { ...state.reviews } }
             delete newState.reviews[action.reviewId]
+            delete newState.review
             return newState;
         case ADD_REVIEW:
-            const newReviewState = { ...state, reviews: { ...state.reviews } }
+            const newReviewState = { ...state, reviews: { ...state.reviews }}
+            newReviewState.review = action.review
             newReviewState.reviews[action.review.id] = action.review;
             return newReviewState
         case EDIT_REVIEW:
-            const updateReviewState = { ...state, review: { ...state.reviews } }
+            const updateReviewState = { ...state, reviewsState: { ...state.reviews } }
             updateReviewState.reviews[action.review.id] = action.review;
             return updateReviewState;
         default:
-            return initialState;
+            return state;
     }
 }
 

@@ -23,7 +23,7 @@ function ProfileButton({ user }) {
     if (!showMenu) return;
 
     const closeMenu = (e) => {
-      if (!ulRef.current.contains(e.target)) {
+      if (ulRef && !ulRef.current.contains(e.target)) {
         setShowMenu(false);
       }
     };
@@ -53,9 +53,9 @@ function ProfileButton({ user }) {
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <div className ='dropdown-menu'>
-            <li>{user.username}</li>
-            <li>{user.firstName} {user.lastName}</li>
+            <li>Hello, {user.firstName}</li>
             <li>{user.email}</li>
+            <hr />
             <li><Link to="/spots/current">Manage Spots</Link></li>
             <li><Link to="/reviews/current">Manage Reviews</Link></li>
             <li>

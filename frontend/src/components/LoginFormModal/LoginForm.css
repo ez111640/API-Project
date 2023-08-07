@@ -1,14 +1,56 @@
-form {
+.login-form {
     font-size: 22px;
-    display: block;
-}
-
-button, h2, label {
     display: flex;
-}
-
-button {
-    background-color: grey;
+    flex-wrap: wrap;
+    width: 80%;
     margin-left: auto;
     margin-right: auto;
+    row-gap: 5px;
+}
+
+.login-header {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 0px;
+}
+
+.login-form label {
+    font-size: 14px;
+}
+
+.login-form input {
+    margin-top: 0px;
+}
+
+.modal-submit {
+    background-color: #ff385c;
+    margin-bottom: 10px;
+    margin-top: 8px;
+    width: 100%;
+    height: 30px;
+    border: 1px solid grey;
+    color: white;
+}
+
+.demo-user {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    color: grey;
+    background-color: white;
+    border: none;
+    text-decoration: underline;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.modal-submit:disabled {
+    background-color: grey;
+}
+
+.errors {
+    font-size: 14px;
+    color: red;
 }

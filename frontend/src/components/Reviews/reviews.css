@@ -6,14 +6,6 @@
     flex-direction: row;
 
 }
-.delete-modal {
-    width: 40%;
-
-
-
-}
-
-
 
 .review-container button {
     background-color: grey;
@@ -23,4 +15,68 @@
 
 .manage-reviews-container {
     margin-left: 20px;
+}
+
+.each-review-div{
+    display: block;
+    margin-top: 10px;
+
+}
+
+.each-review-div p {
+    margin-top: 8px;
+}
+
+.review-container{
+    display: block;
+
+}
+
+.each-review-div h3{
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+.each-review-div h4{
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-size: 14px;
+    color: grey;
+}
+
+ .review-container {
+    padding-left: 0px;
+}
+
+.delete-modal button{
+    margin-right: 10px;
+
+}
+
+.confirm-delete{
+    display: grid;
+    grid-template-rows: repeat( 4, 1fr);
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+
+}
+
+.confirm-delete h1 {
+    justify-self: center;
+}
+
+.yes-delete-button {
+    background-color: red;
+}
+
+.no-delete-button {
+    background-color: darkgrey;
+}
+
+.confirm-delete button {
+    width: 90%;
+    height: 70%;
+    padding: none;
+    margin-left: auto;
+    margin-right: auto;
 }

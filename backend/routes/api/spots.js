@@ -87,7 +87,22 @@ const validateReviews = [
     handleValidationErrors
 ]
 
+const badRequest = (err, req, res, next) => {
+    res.status(400)
+    res.setHeader('Content-Type', 'application/json')
+    res.json({
+        message: "Bad request",
+        errors: err.errors
+    })
+}
 
+const notFound = (err, req, res, next) => {
+    res.status(404)
+    res.setHeader('Content-Type','application/json')
+    res.json({
+        message: "Not found"
+    })
+}
 
 router.get('/current', requireAuth, async (req, res) => {
 
@@ -205,7 +220,6 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
 
 router.post('/:spotId/reviews', requireAuth, validateReviews, async (req, res, next) => {
     const { review, stars } = req.body;
-    const ownerId = parseInt(req.user.id)
     const id = parseInt(req.params.spotId)
 
     const spot = await Spot.findByPk(id);
@@ -495,7 +509,14 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
 router.post('/', requireAuth, validateSpot, async (req, res, next) => {
     const { address, city, state, country, lat, lng, name, description, price } = req.body
 
-
+    if(isNaN(price)) {
+        res.status(500)
+        const err = new Error("Price invalid")
+        err.errors = {
+            price: "Price is not a number"
+        }
+        return res.json(err.errors)
+    }
     const newSpot = await Spot.create({
         address,
         city,
@@ -508,6 +529,9 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
         price: Number(price),
         ownerId: req.user.id
     })
+
+
+
     res.status(201)
     return res.json({
         newSpot

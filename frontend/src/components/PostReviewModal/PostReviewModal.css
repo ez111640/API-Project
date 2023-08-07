@@ -1,14 +1,26 @@
 .ratingsArea {
     display: flex;
     justify-content: center;
-    margin-bottom: 10px;
+    align-items: center;
+    margin-bottom: 0px;
+    padding: 10px;
 
 }
 
-.review-modal {
-    padding: 20px;
-}
 
 .ratingsArea i {
     font-size: 30px;
+    margin: 0px;
+
+
+}
+
+.ratingsArea div {
+    align-self: center;
+}
+
+.ratingsArea p {
+    font-size: 26px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
 }

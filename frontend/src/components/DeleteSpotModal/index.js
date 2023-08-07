@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min"
 import { useModal } from "../../context/modal";
 import { deleteSpot } from "../../store/spots";
 import { useEffect } from "react";
+import "./deleteSpotModal.css"
 
 const DeleteSpotModal = ({spotId}) => {
     const dispatch = useDispatch();
@@ -19,11 +20,11 @@ const DeleteSpotModal = ({spotId}) => {
 
     return (
 
-        <div>
+        <div className = "confirm-delete">
             <h1>Confirm Delete</h1>
             <p>Are you sure you want to remove this spot from the listings?</p>
-            <button onClick={onSubmit} type="submit">Yes (Delete Spot)</button>
-            <button>No (Keep Spot)</button>
+            <button className="yes-delete-button" onClick={onSubmit} type="submit">Yes (Delete Spot)</button>
+            <button className="no-delete-button">No (Keep Spot)</button>
         </div>
     )
 }

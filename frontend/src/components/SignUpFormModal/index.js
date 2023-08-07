@@ -36,8 +36,10 @@ function SignUpFormModal() {
             )
             .then(closeModal)
             .catch(async res => {
+
                 const data = await res.json();
                 if(data && data.errors) {
+                    console.log("DAtA ERRORS" , data.errors)
                     setErrors(data.errors)
                 }
             })
@@ -48,52 +50,54 @@ function SignUpFormModal() {
 
     }
     return (
-        <div>
+        <div className = "signup-div">
             <h2>Sign Up</h2>
-            <form onSubmit={onSubmit}>
-                <label>Username
-                    <input
-                    type="text"
-                    value={username}
-                    onChange={e=> setUsername(e.target.value)}></input>
-                </label>
-                {errors.username && <p>{errors.username}</p>}
+            <form className = "signup-form" onSubmit={onSubmit}>
                 <label>First Name
                     <input
                     type="text"
                     value={firstName}
                     onChange={e=> setFirstName(e.target.value)}></input>
                 </label>
-                {errors.firstName  && <p>{errors.firstName}</p>}
                 <label>Last Name
                     <input
                     type="text"
                     value={lastName}
                     onChange = {e=> setLastName(e.target.value)}></input>
                 </label>
-                {errors.lastName && <p>{errors.lastName}</p>}
+                    {errors.firstName ? <p>{errors.firstName}</p> : <p></p>}
+                {errors.lastName ? <p>{errors.lastName}</p> : <p></p>}
                 <label>Email
                     <input
                     type="text"
                     value={email}
                     onChange={e=> setEmail(e.target.value)}></input>
                 </label>
-                {errors.email && <p>{errors.email}</p>}
+
+                <label>Username
+                    <input
+                    type="text"
+                    value={username}
+                    onChange={e=> setUsername(e.target.value)}></input>
+                </label>
+                {errors.email ?  <p>{errors.email}</p> : <p></p>}
+                {errors.username ? <p>{errors.username}</p> : <p></p>}
                 <label>Password
                     <input
                     type="text"
                     value={password}
                     onChange={e=> setPassword(e.target.value)}></input>
                 </label>
-                {errors.password && <p>{errors.password}</p>}
+
                 <label>Confirm Password
                     <input
                     type="text"
                     value={confirmPassword}
                     onChange = {e=> setConfirmPassword(e.target.value)}></input>
                 </label>
-                {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-                <button type="submit">Sign Up</button>
+                {errors.password ? <p>{errors.password}</p> : <p></p>}
+
+                <button className= "signup-button" type="submit" disabled={!username || !firstName || !lastName || !password || !email || !password || !confirmPassword|| username.length <4 || password.length < 6}>Sign Up</button>
             </form>
         </div>
     )

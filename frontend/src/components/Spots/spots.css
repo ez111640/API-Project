@@ -1,15 +1,28 @@
 
-ul {
+.spot-list ul {
     display: flex;
     flex-wrap: wrap;
     column-gap: 20px;
     row-gap: 10px;
-    padding-left: 80px;
+    width: 100% ;
+}
+
+.spot-list{
+    margin-left: 40px;
+    margin-right: auto;
+    align-self: center;
+    width: 100%;
+    max-width: 950px;
 }
 
 .spotDetailHeader {
     display: flex;
 
+}
+
+.show-num-reviews {
+   font-size: 16px;
+   font-weight: bold;
 }
 
 .prevImage {
@@ -21,6 +34,7 @@ ul {
 
 .location-rating {
     display: flex;
+
     justify-content: space-between;
     margin-bottom: 0px;
 }
@@ -38,10 +52,17 @@ ul {
     color: black;
 }
 
+.spot-rating i{
+    font-size: 12px;
+}
+
 .spot-rating {
     margin-top: 5px;
     font-size: 12px;
     margin-bottom: 0px;
+    display: flex;
+    font-weight: bold;
+
 }
 
 .fa-solid {
@@ -64,28 +85,35 @@ ul {
 }
 
 .spot-price {
-    margin-top: 0px;
+    margin-top: 4px;
     font-size: 11px;
+    font-weight: bold;
 }
 
 
 
 .spot-detail-wrapper {
-    width: fit-content;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1000px;
 
 }
 
 .spot-detail-photo-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    border-radius: 10px;
+    border-radius: 26px;
     overflow: hidden;
     column-gap: 10px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .detail-prev-photo {
-    width: 480px;
-    height: 448px;
+    width: 400px;
+    height: 380px;
     object-fit: cover;
 }
 
@@ -100,8 +128,8 @@ ul {
 }
 
 .additional-photos img {
-    width: 240px;
-    height: 220px;
+    width: 202px;
+    height: 184px;
     object-fit: cover;
 
 }
@@ -113,7 +141,7 @@ ul {
 }
 
 .spot-detail-info i{
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .spot-detail-host-info {
@@ -139,23 +167,47 @@ ul {
     margin-top: 10px;
     margin-left: auto;
     margin-right: auto;
+    display: grid;
 }
 
 .resInfo{
     width: 100%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     column-gap: 10px;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+
+}
+
+.fa-solid {
+    display: flex;
+    align-items: center;
+}
+
+
+.resInfo i{
+    font-size: 14px;
+    padding-bottom: 4px;
+    display: flex;
+    justify-content: center;
+}
+
+.star-area {
+    display: flex;
     align-items: center;
     justify-self: center;
 
 }
 
+
+
 .res-reviews {
     display: flex;
-    justify-content: flex-end;
     column-gap: 10px;
-    font-size: 18px;
+    margin-left: 20px;
+    align-items: center;
 }
 .res-reviews i {
     font-size: 16px;
@@ -178,10 +230,14 @@ ul {
 
 }
 
+.cost input {
+    width: 96%;
+}
+
+
 .spot-form-header {
     display: flex;
     justify-content: center;
-    padding-bottom: 20px;
 }
 
 .reserve-button {
@@ -190,6 +246,7 @@ ul {
     background-color: #ff385c;
     color: white;
     margin-top: 0px;
+    justify-self: center ;
 }
 
 .create-spot-button {
@@ -200,13 +257,48 @@ ul {
 
 .manage-spots-header {
     display: grid;
-    grid-template-rows: 2;
-    width: 100%;
-    justify-content: start;
+    margin-left: 80px;
 }
 
 
 
 a {
     color: black;
+}
+
+.post-review-button {
+    background-color: rgb(58, 62, 58);
+    color: white;
+    margin-bottom: 10px;
+}
+
+
+.form-submit-button {
+    background-color:#ff385c;
+    color: white;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-submit-button-container {
+    display: flex;
+}
+
+h5, h3 {
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+h5 {
+    font-size: 14px;
+}
+
+hr {
+    margin-top: 20px;
+}
+
+
+.error-class {
+    color: red;
+    font-size: 14px;
 }

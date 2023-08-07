@@ -35,14 +35,16 @@ function SpotsCurrent() {
 
                 <button className="create-spot-button" type="submit"><Link to="/spots/new">Create New Spot</Link></button>
             </div>
-            <div className='manage-spot-list'>
+            <div className='spot-list'>
+                <ul>
                 {currentSpots.length >= 0 ? currentSpots.map((spot) =>
-                (<div key={spot.id}>
+                (<li key={spot.id}>
                     <SpotInfo spot={spot} currentUser={true} />
-                </div>)
+                </li>)
                 )
                     : "No spots found"
                 }
+                </ul>
             </div>
         </div>
     )
